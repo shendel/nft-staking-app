@@ -14,7 +14,7 @@ const logoBlock = (options) => {
       <div className={`${styles.mainLogo} logoAddParams`}>
         <a href={getLink(`index`)}>
           <img
-            src={getDesign('logoUri', `uri`, getAssets(`images/logo.png`, 'mainLogo'))}
+            src={getDesign('logoUri', `uri`, getAssets(`vkmpnft.png`, 'mainLogo'))}
             alt={getText(`Stake NFT - earn ERC20`, `MainPage_Header`)}
           />
         </a>

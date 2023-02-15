@@ -20,7 +20,7 @@ const Home: NextPage = (props) => {
         getText,
         getDesign
       })}
-      <h1 className={`${styles.h1} pageTitle`}>{getText(`MainPage_Header`, `Stake NFT - earn ERC20`)}</h1>
+      <h1 className={`${styles.h1} pageTitle`}>{getText(`MainPage_VK_Header`, `VK NFT MP`)}</h1>
 
       <div className="mainPageTextAfterTitle">
         {getText(`MainPage_AfterTitle`)}
@@ -31,12 +31,12 @@ const Home: NextPage = (props) => {
         {/* Mint a new NFT */}
         { getBoolOption( `EnabledDemoMind` , true ) && (
           <div className={`${styles.optionSelectBox} mainPageSection`}>
-            <a href={getLink(`mint`)}>
+            <a href={getLink(`mintown`)}>
               <h2 className={styles.selectBoxTitle}>
-                {getText(`MainPage_Mint_Title`, `Mint demo NFT`)}
+                {getText(`MainOwnPage_Mint_Title`, `Mint NFT`)}
               </h2>
               <p className={styles.selectBoxDescription}>
-                {getText(`MainPage_Mint_Desc`, `Use the NFT Drop Contract to claim an NFT from the collection.`)}
+                {getText(`MainOwnPage_Mint_Desc`, `Use the NFT Drop Contract to claim an NFT.`)}
               </p>
             </a>
           </div>
@@ -45,14 +45,14 @@ const Home: NextPage = (props) => {
           className={`${styles.optionSelectBox} mainPageSection`}
           
         >
-          <a href={getLink(`stake`)}>
+          <a href={getLink(`marketplace`)}>
             <h2 className={styles.selectBoxTitle}>
-              {getText(`MainPage_Stake_Title`, `Stake Your NFTs`)}
+              {getText(`MainPage_Marketplace_Title`, `NFTs Marketplace`)}
             </h2>
             <p className={styles.selectBoxDescription}>
               {getText(
-                `MainPage_Stake_Desc`,
-                `By locking up NFTs on a platform, you can receive rewards depending on the annual interest rate, the staking duration, and the number of NFTs staked`
+                `MainPage_Marketplace_Desc`,
+                `Buy NFTs or sell yours`
               )}
             </p>
           </a>

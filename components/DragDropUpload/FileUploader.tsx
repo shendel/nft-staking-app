@@ -121,7 +121,8 @@ const FileUploader: React.FC<Props> = (props: Props): JSX.Element => {
     label,
     multiple,
     onDraggingStateChange,
-    dropMessageStyle
+    dropMessageStyle,
+    isEmpty
   } = props;
   const labelRef = useRef<HTMLLabelElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -239,7 +240,7 @@ const FileUploader: React.FC<Props> = (props: Props): JSX.Element => {
         <>
           <FaIcon icon="image" />
           <DescriptionWrapper error={error}>
-            {drawDescription(currFiles, uploaded, error, disabled, label)}
+            {drawDescription(currFiles, uploaded , error, disabled, label)}
             <DrawTypes types={types} minSize={minSize} maxSize={maxSize} />
           </DescriptionWrapper>
         </>

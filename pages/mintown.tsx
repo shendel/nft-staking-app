@@ -212,10 +212,12 @@ const Mint: NextPage = (props) => {
   const [ isMintShow, setIsMintShow ] = useState(false)
   
   const [ mintedNFT, setMintedNft ] = useState(false)
+  const [ mintError, setMintError ] = useState(false)
   
   const resetMintForm = () => {
     setIsMintShow(false)
     setIsImageUploaded(false)
+    setMintError(false)
     setIsJsonUploaded(false)
     setNftName(``)
     setNftDesc(``)
@@ -226,7 +228,7 @@ const Mint: NextPage = (props) => {
   const doMintNFT = () => {
     if (nftImageDataBuffer == null) return addNotify(`Select NFT image`, `error`)
     if (nftName == ``) return addNotify(`Enter NFT name`, `error`)
-    if (nftDesc == ``) return addNotify(`Enter NFT description`, `error`)
+    //if (nftDesc == ``) return addNotify(`Enter NFT description`, `error`)
 
     setIsMinting(false)
     setMintTx(false)
@@ -279,6 +281,7 @@ const Mint: NextPage = (props) => {
           onError: (err) => {
             console.log('>> onError', err)
             addNotify(`Fail mint NFT. ${err.message ? err.message : ''}`, `error`)
+            setMintError(true)
           },
           onFinally: (answer) => {
             console.log('>> onFinally', answer)
@@ -307,12 +310,14 @@ const Mint: NextPage = (props) => {
         setIsJsonUpload(false)
         setIsJsonUploadError(true)
         setIsMinting(false)
+        setMintError(true)
       })
     }).catch((err) => {
       console.log('>>> err', err)
       setIsImageUploadError(true)
       setIsImageUpload(false)
       setIsMinting(false)
+      setMintError(true)
     })
   }
 
@@ -445,6 +450,7 @@ const Mint: NextPage = (props) => {
                         handleChange={handleChangeNFTImage}
                         onDraggingStateChange={handleDragImage}
                         types={nftAllowedTypes}
+                        isEmpty={nftImage == null}
                       />
                       {nftImageData && (
                         <div className="imageHolder">
@@ -453,7 +459,7 @@ const Mint: NextPage = (props) => {
                       )}
                     </div>
                     <div className="inputHolder">
-                      <label>Name:</label>
+                      <label>*Name:</label>
                       <input type="text" value={nftName} onChange={(e) => { setNftName(e.target.value) }} />
                     </div>
                     <div className="inputHolder">
@@ -474,7 +480,7 @@ const Mint: NextPage = (props) => {
                           {isJsonUploadError && (<label className="error">Fail upload NFT metadata to IPFS</label>)}
                           {isMinting && !isMinted && (<label>Minting NFT. Confirm transaction</label>)}
                           {isMinted && (<label>NFT Minted!</label>)}
-                          {isMinted && (
+                          {(isMinted || mintError) && (
                             <div>
                               <button onClick={resetMintForm} className={`${styles.mainButton} primaryButton`}>Close</button>
                             </div>
@@ -483,6 +489,7 @@ const Mint: NextPage = (props) => {
                       </div>
                     )}
                   </div>
+                  <button onClick={resetMintForm}>Test</button>
                 </>
               ) : (
                 <>
