@@ -101,78 +101,6 @@
 				"inputs": [
 					{
 						"internalType": "string",
-						"name": "",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"name": "scopeData",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"name": "scopeDataKeyExists",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "scopeDataKeys",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
 						"name": "_scopeKey",
 						"type": "string"
 					},
@@ -221,11 +149,11 @@
 	},
 	"sources": {
 		"source/ExStorage.sol": {
-			"keccak256": "0x004129dd38650f6d6bbbe375eb26ed58c7da6ced432bf76bd9326b35e484b8fd",
+			"keccak256": "0xe8f37d7e3787a015bc89d941438be2d2421a0ce41eb97d753495835b3ab135e2",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://31f117286856832f1b5e3e743e70ded74706ee0a9da950556b31f25a1f0b4bf1",
-				"dweb:/ipfs/Qmc8WvVwB1zMQyNESDXje1d9G7XE3TX3nimEeEhg1wa4s7"
+				"bzz-raw://60e8e411ded2d5b0e8a35177942ee28faa9958688d2b5b42c74749e324c4ca5b",
+				"dweb:/ipfs/QmSpENrHAKQRxHXhh7s2H2Y8C2gox8tXgfe5jiBUcr2kMd"
 			]
 		}
 	},

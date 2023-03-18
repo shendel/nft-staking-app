@@ -34,9 +34,9 @@ contract ExStorage {
         _;
     }
 
-    mapping (string => mapping (string => string)) public scopeData;
-    mapping (string => string[]) public scopeDataKeys;
-    mapping (string => mapping (string => bool)) public scopeDataKeyExists;
+    mapping (string => mapping (string => string)) private scopeData;
+    mapping (string => string[]) private scopeDataKeys;
+    mapping (string => mapping (string => bool)) private scopeDataKeyExists;
 
 
     constructor(address _mainStorage) {
