@@ -66,10 +66,10 @@ export default function NftMedia(options) {
             {isFetched && (
               <>
                 {jsonData && jsonData.image && (
-                  <img src={ipfsUrl(jsonData.image)} />
+                  <img src={ipfsUrl(jsonData.image)} loading="lazy" />
                 )}
                 {isImageUrl && (
-                  <img src={ipfsUrl(url)} />
+                  <img src={ipfsUrl(url)} loading="lazy" />
                 )}
                 {jsonData && jsonData.name && (
                   <strong>{jsonData.name}</strong>
