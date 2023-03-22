@@ -5,14 +5,20 @@ import useStorage from "../storage"
 
 import MintDemo from "./mint_demo.tsx"
 import MintOwn from "./mint_own.tsx"
-import MintRand from "./mint_rand.tsx"
+import Mint721r from "./mint_721r.tsx"
 
 const Mint: NextPage = (props) => {
-
+  const {
+    storageData: {
+      mintType,
+    },
+  } = props
   return (
-    <div>
-      <MintDemo {...props} />
-    </div>
+    <>
+      {mintType == `DEMO` && (<MintDemo {...props} />)}
+      {mintType == `NFTMARKETPLACE` && (<MintOwn {...props} />)}
+      {mintType == `ERC721R` && (<Mint721r {...props} />)}
+    </>
   );
 };
 

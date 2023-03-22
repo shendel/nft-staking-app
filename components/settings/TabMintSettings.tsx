@@ -16,7 +16,7 @@ const MINT_TYPES = [
     title: `Use Mint Demo NFT`,
   },
   {
-    id: `STAKE`,
+    id: `NFTMARKETPLACE`,
     title: `Use Mint NFTStake token`,
   },
   {
@@ -26,11 +26,11 @@ const MINT_TYPES = [
 ]
 
 const MINT_TYPE_DESCRIPTION = {
-  DISABLED: `Страница минта нфт будет не доступна пользователям`,
-  DEMO: `Будет использоваться страница для минта демо нфт (для тестирования функционала скрипта)`,
-  STAKE: `Будет использоваться страница для минта NFTStake. Контракт этого токена создается через админ-панель скрипта. Этот токен поддерживает маркетплейс`,
-  ERC721R: `Будет использоваться страница для минта ERC721r. Используется со своим контрактом.
-    У контракта должны быть доступно свойство 'cost', 'maxMintAmountPerTx', а так-же должен быть метод mint(uint quantity)`
+  DISABLED: `The Mint NFT page will not be available to users`,
+  DEMO: `The page for Mint demo NFT will be used (for testing the functionality of the script)`,
+  NFTMARKETPLACE: `The NFTStake mint page will be used. The contract for this token is created through the admin panel of the script. This token supports the marketplace`,
+  ERC721R: `The page for mint ERC721r will be used. Used with your contract.
+    The contract must have the "cost", "maxMintAmountPerTx" property available, and the "mint(uint quantity)" method`
 }
 export default function TabMintSettings(options) {
   const {
@@ -41,9 +41,32 @@ export default function TabMintSettings(options) {
   } = options
 
   const [ isSaveChanges, setIsSaveChanges ] = useState(false)
-  const [ newMintType, setNewMintType ] = useState('DEMO')
+  const [ newMintType, setNewMintType ] = useState(storageData.mintType)
   
   const doSaveChanges = () => {
+    openConfirmWindow({
+      title: `Save changes`,
+      message: `Save Mint page changes to storage config?`,
+      onConfirm: () => {
+        setIsSaveChanges(true)
+        saveStorageConfig({
+          newData: {
+            mintType: newMintType
+          },
+          onBegin: () => {
+            addNotify(`Confirm transaction for save main config`)
+          },
+          onReady: () => {
+            addNotify(`Main config successfull saved`, `success`)
+            setIsSaveChanges(false)
+          },
+          onError: (err) => {
+            addNotify(`Fail save main config`, `error`)
+            setIsSaveChanges(false)
+          }
+        })
+      }
+    })
   }
 
   useEffect(() => {
@@ -60,21 +83,24 @@ export default function TabMintSettings(options) {
               type: `list`,
               values: MINT_TYPES,
               value: newMintType,
-              onChange: setNewMintType
+              onChange: setNewMintType,
+              afterDesc: MINT_TYPE_DESCRIPTION[newMintType],
+              buttons: (
+                <SwitchNetworkAndCall
+                  chainId={`STORAGE`}
+                  className={styles.adminSubButton}
+                  disabled={isSaveChanges}
+                  onClick={doSaveChanges}
+                  action={`Save changes`}
+                  icon="save"
+                >
+                  {isSaveChanges ? `Saving Mint page type...` : `Save Mint page type`}
+                </SwitchNetworkAndCall>
+              )
             })}
-            <div className={styles.adminSectionDescription}>{MINT_TYPE_DESCRIPTION[newMintType]}</div>
           </div>
           <div className={styles.adminFormBottom}>
-            <SwitchNetworkAndCall
-              chainId={`STORAGE`}
-              className={styles.adminMainButton}
-              disabled={isSaveChanges}
-              onClick={doSaveChanges}
-              action={`Save changes`}
-              icon="save"
-            >
-              {isSaveChanges ? `Saving changes...` : `Save changes`}
-            </SwitchNetworkAndCall>
+            
           </div>
         </>
       )

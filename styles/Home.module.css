@@ -1394,3 +1394,11 @@ DIV.helpTooltip:hover DIV {
 .adminPopupWindow .adminForm .subFormInfo {
   border: 0px;
 }
+
+.adminFormBeforeDesc,
+.adminFormAfterDesc {
+  display: block;
+  font-size: 10pt;
+  padding: 5px;
+  padding-left: 10px;
+}

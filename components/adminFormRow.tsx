@@ -11,7 +11,11 @@ export default function adminFormRow(options) {
     placeholder,
     hasError,
     errorText,
-  } = options
+    beforeDesc,
+    afterDesc
+  } = {
+    ...options
+  }
 
   let inputType = type
   switch (type) {
@@ -29,6 +33,7 @@ export default function adminFormRow(options) {
             {hasError && errorText && (
               <span className={styles.hasError}>{errorText}</span>
             )}
+            {beforeDesc && (<span className={styles.adminFormBeforeDesc}>{beforeDesc}</span>)}
             <select value={value} onChange={(v) => onChange(v.target.value)}>
               {values.map((item) => {
                 return (
@@ -36,16 +41,20 @@ export default function adminFormRow(options) {
                 )
               })}
             </select>
+            {afterDesc && (<span className={styles.adminFormAfterDesc}>{afterDesc}</span>)}
           </div>
         </>
       ) : (
         <>
           <label>{label}:</label>
+          
           {hasError && errorText && (
             <span className={styles.hasError}>{errorText}</span>
           )}
           <div>
+            {beforeDesc && (<span className={styles.adminFormBeforeDesc}>{beforeDesc}</span>)}
             <input type={inputType} placeholder={placeholder || ``} value={value} onChange={(v) => onChange(v.target.value)} />
+            {afterDesc && (<span className={styles.adminFormAfterDesc}>{afterDesc}</span>)}
           </div>
         </>
       )}
