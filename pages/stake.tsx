@@ -277,11 +277,16 @@ const Stake: NextPage = (props) => {
         console.log('Fail fetch total supply')
       }
       // MAX SUPPLY
+      let maxSupplyType = `maxSupply`
       try {
-        maxSupply = await nftContract.methods.MAX_SUPPLY().call()
+        maxSupply = await nftContract.methods.maxSupply().call()
         hasMaxSupply = true
+        maxSupplyType = `maxSupply`
       } catch (err) {
         console.log('Fail fetch max supply')
+        maxSupply = await nftContract.methods.MAX_SUPPLY().call()
+        hasMaxSupply = true
+        maxSupplyType = `MAX_SUPPLY`
       }
       console.log('hasMaxSupply', hasMaxSupply)
       console.log('hasTotalSupply', hasTotalSupply)
@@ -311,10 +316,33 @@ const Stake: NextPage = (props) => {
           }).catch((e) => {
             setOwnedNftsUrisFetching(false)
           })
-        }).catch((err) => {
+        }).catch(async (err) => {
           console.log('>>> fetchUserNfts', err)
-          setOwnedNftsLoadError(true)
-          processError(err, fetchUserNfts)
+          console.log('TRY FOR EACH')
+          const _userTokenIds = []
+          for (let checkTokenId = 1; checkTokenId<=maxSupply; checkTokenId++) {
+            try {
+              const tokenOwner = await nftContract.methods.ownerOf(checkTokenId).call()
+              if (tokenOwner === address) _userTokenIds.push(checkTokenId)
+            } catch (e) {
+              console.log('>>> Fail', checkTokenId)
+            }
+          }
+          setOwnedNfts(_userTokenIds)
+          setOwnedNftsLoading(false)
+          setOwnedNftsUrisFetching(true)
+          fetchTokenUris(_userTokenIds).then((tokenUris) => {
+            setOwnedNftsUris(tokenUris)
+            setOwnedNftsUrisFetching(false)
+          }).catch((e) => {
+            setOwnedNftsUrisFetching(false)
+          })
+          /*
+          } catch (e) {
+            setOwnedNftsLoadError(true)
+            processError(err, fetchUserNfts)
+          }
+          */
         })
       }
     }

@@ -36,6 +36,7 @@ export const getStorageInfo = () => {
 const parseInfo = (info) => {
   const parsed = {
     chainId: '',
+    mintType: 'DEMO',
     nftCollection: '',
     rewardToken: '',
     farmContract: '',
