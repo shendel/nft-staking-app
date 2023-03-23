@@ -73,6 +73,21 @@ const parseExInfo = (info) => {
   return parsed
 }
 
+const processExData = (parsed) => {
+  Object.keys(parsed.exdata).forEach((exDataKey) => {
+    if (exDataKey.substr(0, `design_`.length) == `design_`) {
+      Object.keys(parsed.exdata[exDataKey]).forEach((k) => {
+        parsed.design[k] = parsed.exdata[exDataKey][k]
+      })
+    }
+    if (exDataKey.substr(0, `texts_`.length) == `texts_`) {
+      Object.keys(parsed.exdata[exDataKey]).forEach((k) => {
+        parsed.texts[k] = parsed.exdata[exDataKey][k]
+      })
+    }
+  })
+  return parsed
+}
 
 export default function useStorage() {
   const [storageData, setStorageData] = useState(null)
@@ -127,6 +142,7 @@ export default function useStorage() {
           setError(error)
         }
         if (parsed) {
+          parsed = processExData(parsed)
           const { owner } = storageData
 
           const isBaseConfigReady = (

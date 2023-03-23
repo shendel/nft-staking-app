@@ -33,6 +33,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     storageDesign,
     storageMenu,
   } = useStorage()
+  //const storageDesign = storageData?.exdata?.design || {}
+  //const storageTexts = storageData?.exdata?.texts || {}
   const router = useRouter()
 console.log(storageData)
   const urlExt = (process.env.NODE_ENV && process.env.NODE_ENV !== 'production') ? `` : `.html`

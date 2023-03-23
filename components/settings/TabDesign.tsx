@@ -8,8 +8,122 @@ import toggleGroup from "../toggleGroup"
 import iconButton from "../iconButton"
 import InputColor from 'react-input-color'
 
+import SwitchNetworkAndCall from "../SwitchNetworkAndCall"
 
 const useStateColor = useStateUri
+
+const designGroups = [
+  {
+    title: 'Main settings',
+    key: 'mainSettings',
+    items: [
+      { type: 'uri', title: 'Logo uri', target: 'logoUri' },
+      { type: 'number', title: 'Logo max width', target: 'logoMaxWidth', unit: 'px' },
+      { type: 'color', title: 'Background color', target: 'backgroundColor' },
+      { type: 'uri', title: 'Background image', target: 'backgroundImage' },
+      { type: 'color', title: 'Base text color', target: 'baseTextColor' },
+      { type: 'color', title: 'Page title color', target: 'pageTitleColor' },
+      { type: 'color', title: 'HR line color', target: 'hrColor' },
+      { type: 'subgroup', title: 'Primary button' },
+      { type: 'color', title: 'Background color #1', target: 'prButtonBg1' },
+      { type: 'color', title: 'Background color #2', target: 'prButtonBg2' },
+      { type: 'color', title: 'Text color', target: 'prButtonColor' },
+      { type: 'color', title: 'Background (disabled)', target: 'prButtonDisabledBg' },
+      { type: 'color', title: 'Text color (disabled)', target: 'prButtonDisabledColor' },
+      { type: 'number', title: 'Border radius', target: 'prButtonBorderRadius', unit: 'px' },
+    ]
+  },
+  {
+    title: 'Header Navigate menu',
+    key: 'headerNav',
+    items: [
+      { type: 'color', title: 'Background color', target: 'navMenuBgColor' },
+      { type: 'color', title: 'Link color', target: 'navMenuColor' },
+      { type: 'color', title: 'Link hover color', target: 'navMenuHoverColor' },
+      { type: 'color', title: 'Active item color', target: 'navMenuActiveColor' },
+      { type: 'color', title: 'Bottom line color', target: 'navMenuBottomLineColor' },
+      { type: 'number', title: 'Bottom line size', target: 'navMenuBottomLineSize' },
+    ]
+  },
+  {
+    title: 'Footer',
+    key: 'footer',
+    items: [
+      { type: 'color', title: 'Top line color', target: 'footerTopLineColor' },
+      { type: 'number', title: 'Top line size', target: 'footerTopLineSize' },
+      { type: 'color', title: 'Background color', target: 'footerBgColor' },
+      { type: 'color', title: 'Text color', target: 'footerTextColor' },
+      { type: 'color', title: 'Link color', target: 'footerLinkColor' },
+      { type: 'color', title: 'Link color (hover)', target: 'footerLinkHoverColor' },
+    ]
+  },
+  {
+    title: 'Main page',
+    key: 'mainPage',
+    items: [
+      { type: 'color', title: 'After title text color', target: 'mainPageTextAfterTitleColor' },
+      { type: 'subgroup', title: 'Main page sections' },
+      { type: 'color', title: 'Background color', target: 'mainPageSectionBackground' },
+      { type: 'color', title: 'Border color', target: 'mainPageSectionBorderColor' },
+      { type: 'color', title: 'Title color', target: 'mainPageSectionTitleColor' },
+      { type: 'color', title: 'Descripton color', target: 'mainPageSectionDescColor' },
+      { type: 'hr' },
+      { type: 'color', title: 'After sections text color', target: 'mainPageTextAfterSectionsColor' },
+    ],
+  },
+  {
+    title: 'NFT Token design',
+    key: 'nftToken',
+    items: [
+      { type: 'color', title: 'Background color', target: 'nftBackgroundColor' },
+      { type: 'color', title: 'Border color', target: 'nftBorderColor' },
+      { type: 'color', title: 'TokenId color', target: 'nftIdColor' },
+      { type: 'number', title: 'Border radius', target: 'nftBorderRadius', unit: 'px' },
+      { type: 'number', title: 'Border size', target: 'nftBorderSize', unit: 'px' },
+      { type: 'number', title: 'Image max-height', target: 'nftMaxHeight', unit: 'px' },
+    ],
+  },
+  {
+    title: 'Mint page',
+    key: 'mintPage', 
+    items: [
+      { type: 'subgroup', title: 'Connect wallet section' },
+      { type: 'color', title: 'Color of text before connect wallet button', target: 'mintBeforeConnectColor' },
+      { type: 'color', title: 'Color of text after connect wallet button', target: 'mintAfterConnectColor' },
+      { type: 'subgroup', title: 'Main section' },
+      { type: 'color', title: 'Color of subtitle "Mint NFT"', target: 'mintPageSubTitleColor' },
+      { type: 'color', title: 'Color of text before price', target: 'mintPageBeforePriceColor' },
+      { type: 'color', title: 'Color of mint price', target: 'mintPagePriceColor' },
+      { type: 'color', title: 'Color of text after price', target: 'mintPageAfterPriceColor' },
+    ],
+  },
+  {
+    title: 'Stake page',
+    key: 'stakePage',
+    items: [
+      { type: 'subgroup', title: 'Connect wallet section' },
+      { type: 'color', title: 'Color of text before connect wallet button', target: 'stakeBeforeConnectColor' },
+      { type: 'color', title: 'Color of text after connect wallet button', target: 'stakeAfterConnectColor' },
+      { type: 'color', title: 'Connected wallet label color', target: 'stakeConnectWalletColor' },
+      { type: 'subgroup', title: 'Reward section and bank section' },
+      { type: 'color', title: 'Color of text before label', target: 'stakeBeforeYourRewardColor' },
+      { type: 'color', title: '"Your reward" label color', target: 'stakeYourRewardColor' },
+      { type: 'color', title: 'Color of text after label', target: 'stakeAfterYourRewardColor' },
+      { type: 'hr' },
+      { type: 'color', title: 'Background color', target: 'stakeRewardBackground' },
+      { type: 'color', title: 'Title color', target: 'stakeRewardTitleColor' },
+      { type: 'color', title: 'Amount color', target: 'stakeRewardAmountColor' },
+      { type: 'color', title: 'Border color', target: 'stakeRewardBorderColor' },
+      { type: 'number', title: 'Border size', target: 'stakeRewardBorderSize', unit: 'px' },
+      { type: 'number', title: 'Border radius', target: 'stakeRewardBorderRadius', unit: 'px' },
+      { type: 'subgroup', title: 'Stake and unstake section' },
+      { type: 'color', title: '"Your staked NFTs" color', target: 'stakeYourStakedColor' },
+      { type: 'color', title: 'Color of text after "Your staked NFTs"', target: 'stakeYourStakedDescColor' },
+      { type: 'color', title: '"Your Unstaked NFTs" color', target: 'stakeYourUnstakedColor' },
+      { type: 'color', title: 'Color of text after "Your Unstaked NFTs"', target: 'stakeYourUnstakedDescColor' },
+    ],
+  },
+]
 
 export default function TabDesign(options) {
   const {
@@ -18,6 +132,7 @@ export default function TabDesign(options) {
     openConfirmWindow,
     addNotify,
     getActiveChain,
+    saveExStorageConfig,
     storageDesign,
   } = options
 
@@ -168,12 +283,49 @@ export default function TabDesign(options) {
     }
   }, [designValues])
 
+  const [ isDesignSaving, setIsDesignSaving ] = useState(false)
+  const doSaveDesignSection = (groupKey) => {
+    if (isDesignSaving) return
+    const designSection = designGroups.find((groupInfo) => {
+      return groupInfo.key == groupKey
+    })
+    openConfirmWindow({
+      title: `Saving changes`,
+      message: `Save design changes of section "${designSection.title}"?`,
+      onConfirm: () => {
+        const designGroupData = {}
+        designSection.items.forEach((itemData) => {
+          if (`${designValues[itemData.target]}`.toLowerCase() != `${defaultDesign[itemData.target]}`.toLowerCase()) {
+            designGroupData[itemData.target] = designValues[itemData.target]
+          }
+        })
+
+        setIsDesignSaving(true)
+        saveExStorageConfig({
+          key: `design_${groupKey}`,
+          data: designGroupData,
+          onBegin: () => {
+            addNotify(`Confirm transaction for save changes`)
+          },
+          onReady: () => {
+            addNotify(`Changes successfull saved`, `success`)
+            setIsDesignSaving(false)
+          },
+          onError: (err) => {
+            addNotify(`Fail save changes`, `error`)
+            setIsDesignSaving(false)
+          }
+        })
+      }
+    })
+  }
+  
   const doSaveDesign = () => {
     const newDesign = designValues
     const newConfig = {
       design: newDesign
     }
-    saveStorageConfig({
+    saveExStorageConfig({
       onBegin: () => {
         addNotify(`Confirm transaction for save changed texts`)
       },
@@ -183,7 +335,8 @@ export default function TabDesign(options) {
       onError: (err) => {
         addNotify(`Fail save texts`, `error`)
       },
-      newData: newConfig
+      key: `design`,
+      data: newConfig
     })
   }
 
@@ -198,50 +351,95 @@ export default function TabDesign(options) {
     })
   }
 
+  
   return {
     render: () => {
       return (
         <div className={styles.adminForm}>
           <div className={styles.subFormInfo}>
-            {toggleGroup({
-              title: 'Main settings',
-              isOpened: openedTabs?.mainSettings,
-              onToggle: () => { toggleTab('mainSettings') },
-              content: (
+            <div className={styles.actionsRow}>
+              {isPreviewMode ? (
                 <>
-                  {renderUri({ title: 'Logo uri', target: 'logoUri' })}
-                  {renderNumber({ title: 'Logo max width', target: 'logoMaxWidth', unit: 'px' })}
-                  {renderColor({ title: 'Background color', target: 'backgroundColor' })}
-                  {renderUri({ title: 'Background image', target: 'backgroundImage' })}
-                  {renderColor({ title: 'Base text color', target: 'baseTextColor' })}
-                  {renderColor({ title: 'Page title color', target: 'pageTitleColor' })}
-                  {renderColor({ title: 'HR line color', target: 'hrColor' })}
-                  <h5>Primary button</h5>
-                  {renderColor({ title: 'Background color #1', target: 'prButtonBg1' })}
-                  {renderColor({ title: 'Background color #2', target: 'prButtonBg2' })}
-                  
-                  {renderColor({ title: 'Text color', target: 'prButtonColor' })}
-                  {renderColor({ title: 'Background (disabled)', target: 'prButtonDisabledBg' })}
-                  {renderColor({ title: 'Text color (disabled)', target: 'prButtonDisabledColor' })}
-                  {renderNumber({ title: 'Border radius', target: 'prButtonBorderRadius', unit: 'px' })}
+                  <button className={styles.adminButton} onClick={offPreviewDesign}>
+                    Turn off preview mode
+                  </button>
                 </>
-              )
+              ) : (
+                <button className={styles.adminButton} onClick={onPreviewDesign}>
+                  Turn on preview mode
+                </button>
+              )}
+            </div>
+            {designGroups.map((groupInfo) => {
+              return toggleGroup({
+                key: groupInfo.key,
+                title: groupInfo.title,
+                isOpened: openedTabs[groupInfo.key],
+                onToggle: () => { toggleTab(groupInfo.key) },
+                content: (
+                  <>
+                    {groupInfo.items.map((itemData, itemKey) => {
+                      switch (itemData.type) {
+                        case 'uri':
+                          return (
+                            <div key={itemKey}>
+                              {renderUri(itemData)}
+                            </div>
+                          )
+                        case 'color':
+                          return (
+                            <div key={itemKey}>
+                              {renderColor(itemData)}
+                            </div>
+                          )
+                        case 'number':
+                          return (
+                            <div key={itemKey}>
+                              {renderNumber(itemData)}
+                            </div>
+                          )
+                        case 'hr':
+                          return (
+                            <div key={itemKey}>
+                              <hr />
+                            </div>
+                          )
+                        case 'subgroup':
+                          return (
+                            <div key={itemKey}>
+                              <h5>{itemData.title}</h5>
+                            </div>
+                          )
+                        default:
+                          return (
+                            <div key={itemKey}>Unknown {itemData.type}</div>
+                          )
+                      }
+                    })}
+                    <div className={styles.actionsRow}>
+                      <SwitchNetworkAndCall
+                        chainId={`STORAGE`}
+                        className={styles.adminButton}
+                        disabled={isDesignSaving}
+                        onClick={() => { doSaveDesignSection(groupInfo.key) }}
+                        action={`Save section changes`}
+                      >
+                        {isDesignSaving ? `Saving design changes` : `Save design section changes`}
+                      </SwitchNetworkAndCall>
+                    </div>
+                  </>
+                )
+              })
             })}
-            {toggleGroup({
-              title: 'Header Navigate menu',
-              isOpened: openedTabs?.headerNav,
-              onToggle: () => { toggleTab('headerNav') },
-              content: (
-                <>
-                  {renderColor({ title: 'Background color', target: 'navMenuBgColor' })}
-                  {renderColor({ title: 'Link color', target: 'navMenuColor' })}
-                  {renderColor({ title: 'Link hover color', target: 'navMenuHoverColor' })}
-                  {renderColor({ title: 'Active item color', target: 'navMenuActiveColor' })}
-                  {renderColor({ title: 'Bottom line color', target: 'navMenuBottomLineColor' })}
-                  {renderNumber({ title: 'Bottom line size', target: 'navMenuBottomLineSize' })}
-                </>
-              )
-            })}
+          </div>
+        </div>
+      )
+    },
+    render2: () => {
+      return (
+        <div className={styles.adminForm}>
+          <div className={styles.subFormInfo}>
+            
             {toggleGroup({
               title: 'Footer',
               isOpened: openedTabs?.footer,
