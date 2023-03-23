@@ -34,7 +34,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     storageMenu,
   } = useStorage()
   const router = useRouter()
-
+console.log(storageData)
   const urlExt = (process.env.NODE_ENV && process.env.NODE_ENV !== 'production') ? `` : `.html`
 
 

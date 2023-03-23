@@ -37,6 +37,7 @@ export default function TabMintSettings(options) {
     openConfirmWindow,
     addNotify,
     saveStorageConfig,
+    saveExStorageConfig,
     storageData,
   } = options
 
@@ -72,11 +73,31 @@ export default function TabMintSettings(options) {
   useEffect(() => {
   }, [])
 
+  /*
+  const testSaveExdata = () => {
+  
+    saveExStorageConfig({
+      key: 'T2',
+      data: {
+        boo: 'foo',
+        moo: 'xoo',
+      },
+      onBegin: () => {
+        console.log('>>> begin')
+      },
+      onReady: () => {
+        console.log('>>> ready')
+      },
+      onError: () => {
+        console.log('>>> on error')
+      }
+    })
+  }
+  */
   return {
     render: () => {
       return (
         <>
-          
           <div className={styles.adminForm}>
             {adminFormRow({
               label: `Mint Page`,

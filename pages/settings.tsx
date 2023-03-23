@@ -22,6 +22,8 @@ import {
 import { calcSendArgWithFee } from "../helpers/calcSendArgWithFee"
 
 import { getStorageInfo } from "../storage"
+import saveExStorageData from "../storage/saveExStorageData"
+
 import STORAGE_JSON from "../contracts/Storage.json"
 import DurationPicker from "../components/DurationPicker"
 import { getCurrentDomain } from "../helpers/getCurrentDomain"
@@ -38,6 +40,7 @@ import { toWei, fromWei } from "../helpers/wei"
 import openInTab from "../components/openInTab"
 import { textsGroups } from "../helpers/textsGroups"
 import SwitchNetworkAndCall from "../components/SwitchNetworkAndCall"
+
 
 import {
   AVAILABLE_NETWORKS_INFO,
@@ -175,7 +178,43 @@ const Settings: NextPage = (props) => {
   const [storageContract, setStorageContract] = useState(false)
   const [isStorageSave, setIsStorageSave] = useState(false)
 
+  const saveExStorageConfig = async (options) => {
+    const {
+      onBegin,
+      onReady,
+      onError,
+      key,
+      data,
+    } = {
+      onBegin: () => {},
+      onReady: () => {},
+      onError: () => {},
+      ...options,
+    }
 
+    if (isStorageSave) {
+      addNotify(`Storage already saving...`, `error`)
+      return
+    }
+    setIsStorageSave(true)
+    saveExStorageData({
+      activeWeb3,
+      key,
+      data,
+      onBegin: () => {
+        onBegin()
+      },
+      onReady: () => {
+        setIsStorageSave(false)
+        onReady()
+      },
+      onError: () => {
+        setIsStorageSave(false)
+        onError()
+      }
+    })
+  }
+  
   const saveStorageConfig = async (options) => {
     const {
       onBegin,
@@ -972,6 +1011,7 @@ const Settings: NextPage = (props) => {
   const _tabOptions = {
     setDoReloadStorage,
     saveStorageConfig,
+    saveExStorageConfig,
     openConfirmWindow,
     addNotify,
     getActiveChain,

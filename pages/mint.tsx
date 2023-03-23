@@ -16,7 +16,7 @@ const Mint: NextPage = (props) => {
   return (
     <>
       {mintType == `DEMO` && (<MintDemo {...props} />)}
-      {mintType == `NFTMARKETPLACE` && (<MintOwn {...props} />)}
+      {mintType == `NFTMARKETPLACE` && (<MintDemo {...props} />)}
       {mintType == `ERC721R` && (<Mint721r {...props} />)}
     </>
   );

@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.18+commit.87f61d96"
+		"version": "0.8.12+commit.f00d7308"
 	},
 	"language": "Solidity",
 	"output": {
@@ -52,24 +52,24 @@
 		"compilationTarget": {
 			"source/ExStorage.sol": "IStorage"
 		},
-		"evmVersion": "paris",
+		"evmVersion": "london",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
 			"enabled": true,
-			"runs": 200
+			"runs": 99999
 		},
 		"remappings": []
 	},
 	"sources": {
 		"source/ExStorage.sol": {
-			"keccak256": "0xe8f37d7e3787a015bc89d941438be2d2421a0ce41eb97d753495835b3ab135e2",
+			"keccak256": "0x042c3184031574a3e96e41995a52d0267fb0e5b449b468b2b4bc50705785dac5",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://60e8e411ded2d5b0e8a35177942ee28faa9958688d2b5b42c74749e324c4ca5b",
-				"dweb:/ipfs/QmSpENrHAKQRxHXhh7s2H2Y8C2gox8tXgfe5jiBUcr2kMd"
+				"bzz-raw://e5ac5017defead57f6b2947cfdfcc21a531953352178d12f5346bfe2bd571cb7",
+				"dweb:/ipfs/QmWrZBY5CZVf3LsnKrMqSoqEesqNiKa53Kq2Cf5Vh9mMAK"
 			]
 		}
 	},

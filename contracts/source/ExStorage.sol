@@ -102,4 +102,28 @@ contract ExStorage {
             scopeDataKeys[_scopeKey].push(_key);
         }
     }
+
+    function setScopeKeysData(
+        string memory _scopeKey,
+        ScopeKeyData[] memory _keyToData
+    )
+        public
+        notEmpty(_scopeKey)
+        onlyScopeOwner(_scopeKey)
+    {
+        require(_keyToData.length != 0, 'EMPTY DATA');
+        for(uint256 dataIndex = 0; dataIndex < _keyToData.length; dataIndex++) {
+            scopeData[_scopeKey][
+                _keyToData[dataIndex].key
+            ] = _keyToData[dataIndex].info;
+            if (!scopeDataKeyExists[_scopeKey][_keyToData[dataIndex].key]) {
+                scopeDataKeyExists[_scopeKey][
+                    _keyToData[dataIndex].key
+                ] = true;
+                scopeDataKeys[_scopeKey].push(
+                    _keyToData[dataIndex].key
+                );
+            }
+        }
+    }
 }
