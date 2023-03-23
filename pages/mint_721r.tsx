@@ -1,4 +1,5 @@
-import { BigNumber, ethers } from "ethers"
+import { ethers } from "ethers"
+import BigNumber from "bignumber.js"
 import type { NextPage } from "next"
 import { useEffect, useState } from "react"
 import styles from "../styles/Home.module.css"
@@ -11,10 +12,10 @@ import { getLink } from "../helpers"
 import { useRouter } from "next/router"
 import useStorage from "../storage"
 import fetchNftInfo from "../helpers/fetchNftInfo"
-import callNftMethod from "../helpers/callNftMethod"
+import callContractMethod from "../helpers/callContractMethod"
 import crypto from "crypto"
 import nftToken from "../components/nftToken"
-import NftAirdropContractData from "../contracts/source/artifacts/StakeNFT.json"
+import NftAirdropContractData from "../contracts/source/artifacts/NFT_ERC721r.json"
 import MyNFTAbi from '../contracts/MyNFTAbi.json'
 import { CHAIN_INFO } from "../helpers/constants"
 import { toWei, fromWei } from "../helpers/wei"
@@ -32,36 +33,27 @@ const Mint721r = (props) => {
     storageMenu,
   } = props
 
-  const mintUris = [
-    'https://github.com/shendel/crypto-casino/raw/master/public/images/games/slots/symbols/apple.png',
-    'https://github.com/shendel/crypto-casino/raw/master/public/images/games/slots/symbols/bar.png',
-    'https://github.com/shendel/crypto-casino/raw/master/public/images/games/slots/symbols/bell.png',
-    'https://github.com/shendel/crypto-casino/raw/master/public/images/games/slots/symbols/cherry.png',
-    'https://github.com/shendel/crypto-casino/raw/master/public/images/games/slots/symbols/lemon.png',
-    'https://github.com/shendel/crypto-casino/raw/master/public/images/games/slots/symbols/orange.png',
-    'https://github.com/shendel/crypto-casino/raw/master/public/images/games/slots/symbols/plum.png',
-    'https://github.com/shendel/crypto-casino/raw/master/public/images/games/slots/symbols/seven.png',
-    'https://github.com/shendel/crypto-casino/raw/master/public/images/games/slots/symbols/water-melon.png',
-  ]
-
   const [ chainId, setChainId ] = useState(storageData?.chainId)
   const [ nftDropContractAddress, setNftDropContractAddress ] = useState(storageData?.nftCollection)
-
-  const [ nftInfo, setNftInfo ] = useState({})
-  const [ nftInfoFetched, setNftInfoFetched ] = useState(false)
 
   const [activeChainId, setActiveChainId] = useState(false)
   const [activeWeb3, setActiveWeb3] = useState(false)
   const [address, setAddress] = useState(false)
 
-  const [nftContract, setNftContract] = useState(false)
   const [airdropContract, setAirdropContract] = useState(false)
 
   const [isWalletConecting, setIsWalletConnecting] = useState(false)
   const [isMinting, setIsMinting] = useState(false)
   const [isMinted, setIsMinted] = useState(false)
   const [mintedNFT, setMintedNft] = useState({})
+  const [mintedNFTs, setMintedNFTs] = useState([])
 
+  const [ nftInfoFetched, setNftInfoFetched ] = useState(false)
+  const [ mintCost, setMintCost ] = useState(0)
+  const [ mintMaxCount, setMintMaxCount ] = useState(1)
+  const [ mintCount, setMintCount ] = useState(1)
+  const [ baseExtension, setBaseExtension ] = useState(false)
+  
   const processError = (error, error_namespace) => {
     let metamaskError = false
     try {
@@ -86,18 +78,50 @@ const Mint721r = (props) => {
     }
   }
 
+  const fetchERC721rInfo = (nftContract) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const baseExt = await nftContract.methods.baseExtension().call()
+        setBaseExtension(baseExt)
+      } catch (e) {}
+
+      nftContract.methods.cost().call().then((cost) => {
+        console.log(cost)
+        setMintCost(cost)
+        nftContract.methods.maxMintAmountPerTx().call().then((maxPerTx) => {
+          setMintMaxCount(maxPerTx)
+          resolve(true)
+        }).catch ((err) => {
+          console.log('>> Fail fetch max mint per tx - use 1', err)
+          resolve(true)
+        })
+      }).catch((err) => {
+        console.log('>> Fail fetch mint price', err)
+        reject(err)
+      })
+    })
+  }
+
+  const fetchTokenUri = async (tokenId) => {
+    try {
+      const uri = await airdropContract.methods.tokenURI(tokenId).call()
+      if (baseExtension) {
+        if (uri.substr(-baseExtension.length) !== baseExtension) {
+          return `${uri}${tokenId}${baseExtension}`
+        }
+      }
+      return uri
+    } catch (e) { return false }
+  }
+
   const initOnWeb3Ready = async () => {
     if (activeWeb3 && (`${activeChainId}` == `${chainId}`)) {
       activeWeb3.eth.getAccounts().then((accounts) => {
         setAddress(accounts[0])
-        const _myNftContract = new activeWeb3.eth.Contract(MyNFTAbi, nftDropContractAddress)
-        setNftContract(_myNftContract)
         const _airdropContract = new activeWeb3.eth.Contract(NftAirdropContractData.abi, nftDropContractAddress)
         setAirdropContract(_airdropContract)
-        fetchNftInfo(nftDropContractAddress, chainId).then((_nftInfo) => {
-          console.log('>>> nft info fetched', _nftInfo)
-          setNftInfo(_nftInfo)
-          setNftInfoFetched(true)
+        fetchERC721rInfo(_airdropContract).then((success) => {
+          setNftInfoFetched(success)
         }).catch((err) => {
           console.log('>>> fail fetch nft info', err)
         })
@@ -152,15 +176,16 @@ const Mint721r = (props) => {
     if (address && airdropContract) {
       setIsMinting(true)
       addNotify(`Confirm transaction for mint NFT`)
-      const seed = crypto.randomBytes(32).toString('hex')
-      console.log(nftInfo)
-      callNftMethod({
+
+      const mintPriceWei = new BigNumber(mintCost).multipliedBy(mintCount).toFixed()
+      
+      callContractMethod({
         activeWeb3,
-        contractAddress: nftDropContractAddress,
-        method: 'mintRandom',
-        weiAmount: nftInfo.NFTStakeInfo.mintPrice,
+        contract: airdropContract,
+        method: 'mint',
+        weiAmount: mintPriceWei,
         args: [
-          `0x${seed}`
+          mintCount
         ],
         onTrx: (txHash) => {
           console.log('>> onTrx', txHash)
@@ -173,51 +198,36 @@ const Mint721r = (props) => {
         onError: (err) => {
           console.log('>> onError', err)
           addNotify(`Fail mint NFT. ${err.message ? err.message : ''}`, `error`)
+          setIsMinting(false)
         },
-        onFinally: (answer) => {
+        onFinally: async (answer) => {
           console.log('>> onFinally', answer)
           if (
-            answer?.events?.Mint?.returnValues?.tokenUri
-            && answer?.events?.Mint?.returnValues?.tokenId
+            answer?.events?.Transfer
           ) {
-            const {
-              tokenId,
-              tokenUri,
-            } = answer.events.Mint.returnValues
-
-            setMintedNft({
-              tokenId,
-              tokenUri,
+            const mintEvents = (mintCount == 1) ? [answer.events.Transfer] : answer.events.Transfer
+            const mintedIds = mintEvents.map((mintEvent) => {
+              return mintEvent.returnValues.tokenId
             })
-
-            addNotify(`NFT #${tokenId} minted!`, `success`)
+            const newMintedNfts = await Promise.all(mintedIds.map(async (tokenId) => {
+              const tokenUri = await fetchTokenUri(tokenId)
+              return {
+                tokenId,
+                tokenUri
+              }
+            }))
+            setMintedNFTs((prev) => {
+              return [
+                ...newMintedNfts,
+                ...prev
+              ]
+            })
           }
+
           setIsMinting(false)
           setIsMinted(true)
         }
       })
-    }
-  }
-
-  const doMintNFT = async () => {
-    if (address && nftContract) {
-      setIsMinting(true)
-      addNotify(`Confirm transaction for mint demo NFT`)
-      try {
-        const nftUri = mintUris[Math.floor(Math.random()*mintUris.length)]
-        const mintTxData = await calcSendArgWithFee(address, nftContract, "claimNFT", [nftUri])
-        nftContract.methods.claimNFT(nftUri).send(mintTxData).then(() => {
-          setIsMinted(true)
-          setIsMinting(false)
-          addNotify(`Demo NFT minted! Now you can test stake farm.`, `success`)
-        }).catch((e) => {
-          addNotify(`Mint demo NFT transaction failed`, `error`)
-          setIsMinting(false)
-        })
-      } catch (e) {
-        addNotify(`Mint demo NFT transaction failed`, `error`)
-        setIsMinting(false)
-      }
     }
   }
 
@@ -250,59 +260,42 @@ const Mint721r = (props) => {
         <>
           {nftInfoFetched ? (
             <>
-              {nftInfo.isNFTStakeToken ? (
-                <>
-                  <h2 className="mintPageSubTitle">{getText(`MintPage_Managed_Title`, `Mint NFT`)}</h2>
-                  <div className="mintPageTextBeforePrice">
-                    {getText('MintPage_TextBeforePrice')}
-                  </div>
-                  <div className={`${styles.mintPageDesc} mintPagePrice`}>
-                    {getText(
-                      `MintPage_Managed_PriceInfo`,
-                      `Mint price is %amount% %currency%`,
-                      {
-                        amount: fromWei(nftInfo.NFTStakeInfo.mintPrice, mintChainInfo.nativeCurrency.decimals),
-                        currency: mintChainInfo.nativeCurrency.symbol,
-                      }
-                    )}
-                  </div>
-                  <div className="mintPageTextAfterPrice">
-                    {getText('MintPage_TextAfterPrice')}
-                  </div>
-                  <div className={styles.mintPageMintedHolder}>
-                    <button disabled={isMinting} className={`${styles.mainButton} primaryButton`} onClick={doMintPayable}>
-                      {isMinting
-                        ? `Minting NFT...`
-                        : (isMinted)
-                          ? `Mint some one`
-                          : `Mint NFT`
-                      }
-                    </button>
-                  </div>
-                  {mintedNFT && mintedNFT.tokenId && mintedNFT.tokenUri && (
-                    <>
-                      {nftToken({
-                        ...mintedNFT,
-                        isMinted: true,
-                      })}
-                    </>
-                  )}
-                </>
-              ) : (
-                <>
-                  {!isMinted ? (
-                    <button disabled={isMinting} className={`${styles.mainButton} primaryButton`} onClick={doMintNFT}>
-                      {isMinting ? `Minting NFT...` : `Mint NFT`}
-                    </button>
-                  ) : (
-                    <>
-                      <h2>Demo NFT minted</h2>
-                      <a href={getLink('stake')} className={`${styles.mainButton} primaryButton`}>
-                        Go to Stake NFT
-                      </a>
-                    </>
-                  )}
-                </>
+              <h2 className="mintPageSubTitle">{getText(`MintPage_Managed_Title`, `Mint NFT`)}</h2>
+              <div className="mintPageTextBeforePrice">
+                {getText('MintPage_TextBeforePrice')}
+              </div>
+              <div className={`${styles.mintPageDesc} mintPagePrice`}>
+                {getText(
+                  `MintPage_Managed_PriceInfo`,
+                  `Mint price is %amount% %currency%`,
+                  {
+                    amount: fromWei(new BigNumber(mintCost).multipliedBy(mintCount).toFixed() , mintChainInfo.nativeCurrency.decimals),
+                    currency: mintChainInfo.nativeCurrency.symbol,
+                  }
+                )}
+              </div>
+              <div className="mintPageTextAfterPrice">
+                {getText('MintPage_TextAfterPrice')}
+              </div>
+              <div className={styles.mintPageMintedHolder}>
+                <button disabled={isMinting} className={`${styles.mainButton} primaryButton`} onClick={doMintPayable}>
+                  {isMinting
+                    ? `Minting NFT...`
+                    : (isMinted)
+                      ? `Mint some more`
+                      : `Mint NFT`
+                  }
+                </button>
+              </div>
+              {mintedNFTs.length > 0 && (
+                <div className={styles.nftBoxGrid}>
+                  {mintedNFTs.map((nftInfo) => {
+                    return nftToken({
+                      ...nftInfo,
+                      isMinted: true,
+                    })
+                  })}
+                </div>
               )}
             </>
           ) : (

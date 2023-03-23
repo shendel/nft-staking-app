@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import  fetch from "node-fetch"
 import { ipfsUrl } from "../helpers/ipfsUrl"
+import { getAssets } from "../helpers/getAssets"
 
 export default function NftMedia(options) {
   const {
@@ -56,9 +57,36 @@ export default function NftMedia(options) {
     }
   }, [url])
 
+  const [ isLoadedMedia, setIsLoadedMedia ] = useState(false)
+  const onLoaded = () => {
+    setIsLoadedMedia(true)
+  }
+
   return (
     <>
-      <div>
+      <style jsx>
+      {
+        `
+          .nftMedia IMG {
+            opacity: 0;
+            transition: opacity 0.3s linear;
+          }
+          .nftMedia.isLoaded IMG {
+            opacity: 1;
+          }
+          .nftMedia {
+            background: url(${getAssets('images/nft-media-loading.svg')});
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+          }
+          .nftMedia.isLoaded {
+            background: none;
+          }
+        `
+      }
+      </style>
+      <div className={`nftMedia ${(isLoadedMedia) ? 'isLoaded' : ''}`} >
         {isFetching ? (
           <div>{`Fetching`}</div>
         ) : (
@@ -66,10 +94,13 @@ export default function NftMedia(options) {
             {isFetched && (
               <>
                 {jsonData && jsonData.image && (
-                  <img src={ipfsUrl(jsonData.image)} loading="lazy" />
+                  <>
+                    <img src={ipfsUrl(jsonData.image)} onLoad={onLoaded} loading="lazy" />
+                    {/*<img src={getAssets('images/nft-media-loading.svg')} />*/}
+                  </>
                 )}
                 {isImageUrl && (
-                  <img src={ipfsUrl(url)} loading="lazy" />
+                  <img src={ipfsUrl(url)} onLoad={onLoaded} loading="lazy" />
                 )}
                 {jsonData && jsonData.name && (
                   <strong>{jsonData.name}</strong>
