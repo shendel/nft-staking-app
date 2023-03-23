@@ -417,6 +417,7 @@ export default function TabDesign(options) {
                       }
                     })}
                     <div className={styles.actionsRow}>
+                      <hr />
                       <SwitchNetworkAndCall
                         chainId={`STORAGE`}
                         className={styles.adminButton}

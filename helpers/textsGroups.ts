@@ -1,6 +1,7 @@
 export const textsGroups = [
   {
     title: `Main options`,
+    key: 'mainOptions',
     items: [
       {
         code: `App_Title`,
@@ -28,6 +29,7 @@ export const textsGroups = [
   },
   {
     title: `Index page`,
+    key: 'indexPage',
     items: [
       {
         code: `MainPage_Header`,
@@ -76,6 +78,7 @@ export const textsGroups = [
   },
   {
     title: `Mint page`,
+    key: 'mintPage',
     items: [
       {
         code: `MintPage_Title`,
@@ -121,6 +124,7 @@ export const textsGroups = [
   },
   {
     title: `Stake page`,
+    key: 'stakePage',
     items: [
       {
         code: 'StakePage_BeforeConnect_Text',

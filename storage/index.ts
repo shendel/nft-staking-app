@@ -74,6 +74,8 @@ const parseExInfo = (info) => {
 }
 
 const processExData = (parsed) => {
+  parsed.design = {}
+  parsed.texts = {}
   Object.keys(parsed.exdata).forEach((exDataKey) => {
     if (exDataKey.substr(0, `design_`.length) == `design_`) {
       Object.keys(parsed.exdata[exDataKey]).forEach((k) => {
