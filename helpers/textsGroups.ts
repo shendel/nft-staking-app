@@ -53,7 +53,7 @@ export const textsGroups = [
       {
         code: `MainPage_Mint_Title`,
         desc: `Mint section title`,
-        value: `Mint demo NFT`,
+        value: `Mint NFT`,
       },
       {
         code: `MainPage_Mint_Desc`,
@@ -83,7 +83,7 @@ export const textsGroups = [
       {
         code: `MintPage_Title`,
         desc: `Mint page title`,
-        value: `Mint Demo NFTs for test`,
+        value: `Mint NFT`,
       },
       {
         code: 'StakePage_BeforeConnect_Text',
