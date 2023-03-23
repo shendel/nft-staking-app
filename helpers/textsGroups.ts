@@ -1,6 +1,7 @@
 export const textsGroups = [
   {
     title: `Main options`,
+    key: 'mainOptions',
     items: [
       {
         code: `App_Title`,
@@ -28,6 +29,7 @@ export const textsGroups = [
   },
   {
     title: `Index page`,
+    key: 'indexPage',
     items: [
       {
         code: `MainPage_Header`,
@@ -51,7 +53,7 @@ export const textsGroups = [
       {
         code: `MainPage_Mint_Title`,
         desc: `Mint section title`,
-        value: `Mint demo NFT`,
+        value: `Mint NFT`,
       },
       {
         code: `MainPage_Mint_Desc`,
@@ -76,11 +78,12 @@ export const textsGroups = [
   },
   {
     title: `Mint page`,
+    key: 'mintPage',
     items: [
       {
         code: `MintPage_Title`,
         desc: `Mint page title`,
-        value: `Mint Demo NFTs for test`,
+        value: `Mint NFT`,
       },
       {
         code: 'StakePage_BeforeConnect_Text',
@@ -121,6 +124,7 @@ export const textsGroups = [
   },
   {
     title: `Stake page`,
+    key: 'stakePage',
     items: [
       {
         code: 'StakePage_BeforeConnect_Text',

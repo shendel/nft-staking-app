@@ -12,6 +12,7 @@ import {
   CHAIN_EXPLORER_LINK
 } from "../../helpers/constants"
 import { toWei, fromWei } from "../../helpers/wei"
+import SwitchNetworkAndCall from "../SwitchNetworkAndCall"
 
 
 export default function NftInfoBlock(options) {
@@ -320,15 +321,21 @@ export default function NftInfoBlock(options) {
               <div className={styles.actionsRow}>
                 {isEditValues ? (
                   <>
-                    <button onClick={saveChanges}>
+                    <SwitchNetworkAndCall
+                      chainId={chainId}
+                      className={styles.adminButton}
+                      disabled={false}
+                      onClick={saveChanges}
+                      action={`Save changes`}
+                    >
                       Save changes
-                    </button>
-                    <button onClick={offEditValues}>
+                    </SwitchNetworkAndCall>
+                    <button onClick={offEditValues} className={styles.adminButton}>
                       Cancel
                     </button>
                   </>
                 ) : (
-                  <button onClick={onEditValues}>
+                  <button onClick={onEditValues} className={styles.adminButton}>
                     Edit NFT options
                   </button>
                 )}

@@ -233,8 +233,14 @@ const Stake: NextPage = (props) => {
 
   const fetchTokenUris = (tokenIds) => {
     debugLog('do fetchTokenUris', tokenIds)
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       if (address && nftContract && mcContract) {
+        let baseExtension = false
+        
+        try {
+          baseExtension = await nftContract.methods.baseExtension().call()
+        } catch (e) {}
+
         const urisCalls = tokenIds.map((tokenId) => {
           return {
             target: nftDropContractAddress,
@@ -245,7 +251,12 @@ const Stake: NextPage = (props) => {
         mcContract.methods.aggregate(urisCalls).call().then((tokenUrisAnswer) => {
           const _userTokenUris = {}
           tokenUrisAnswer.returnData.forEach((retData, _tokenNumberInCall) => {
-            const tokenUri = ERC721_INTERFACE.decodeFunctionResult('tokenURI', retData)[0]
+            let tokenUri = ERC721_INTERFACE.decodeFunctionResult('tokenURI', retData)[0]
+            if (baseExtension) {
+              if (tokenUri.substr(-baseExtension.length) !== baseExtension) {
+                tokenUri = `${tokenUri}${tokenIds[_tokenNumberInCall]}${baseExtension}`
+              }
+            }
             _userTokenUris[tokenIds[_tokenNumberInCall]] = tokenUri
           })
           resolve(_userTokenUris)
@@ -277,11 +288,16 @@ const Stake: NextPage = (props) => {
         console.log('Fail fetch total supply')
       }
       // MAX SUPPLY
+      let maxSupplyType = `maxSupply`
       try {
-        maxSupply = await nftContract.methods.MAX_SUPPLY().call()
+        maxSupply = await nftContract.methods.maxSupply().call()
         hasMaxSupply = true
+        maxSupplyType = `maxSupply`
       } catch (err) {
         console.log('Fail fetch max supply')
+        maxSupply = await nftContract.methods.MAX_SUPPLY().call()
+        hasMaxSupply = true
+        maxSupplyType = `MAX_SUPPLY`
       }
       console.log('hasMaxSupply', hasMaxSupply)
       console.log('hasTotalSupply', hasTotalSupply)
@@ -290,17 +306,19 @@ const Stake: NextPage = (props) => {
       if (hasMaxSupply || hasTotalSupply) {
         setCanListOwnedNfts(true)
         const ownerCalls = []
-        for (let checkTokenId = 1; checkTokenId<=((hasTotalSupply) ? totalSupply : maxSupply); checkTokenId++) {
+        for (let checkTokenId = 1; checkTokenId<=(maxSupply); checkTokenId++) {
           ownerCalls.push({
             target: nftDropContractAddress,
             callData: ERC721_INTERFACE.encodeFunctionData('ownerOf', [checkTokenId])
           })
         }
-        mcContract.methods.aggregate(ownerCalls).call().then((ownerAnswers) => {
+        mcContract.methods.tryAggregate(false, ownerCalls).call().then((ownerAnswers) => {
           const _userTokenIds = []
-          ownerAnswers.returnData.forEach((retData, _tokenId) => {
-            const tokenOwner = ERC721_INTERFACE.decodeFunctionResult('ownerOf', retData)[0]
-            if (tokenOwner === address) _userTokenIds.push(_tokenId+1)
+          ownerAnswers.forEach((retData, _tokenId) => {
+            if (retData[0]) {
+              const tokenOwner = ERC721_INTERFACE.decodeFunctionResult('ownerOf', retData[1])[0]
+              if (tokenOwner === address) _userTokenIds.push(_tokenId+1)
+            }
           })
           setOwnedNfts(_userTokenIds)
           setOwnedNftsLoading(false)
@@ -312,7 +330,6 @@ const Stake: NextPage = (props) => {
             setOwnedNftsUrisFetching(false)
           })
         }).catch((err) => {
-          console.log('>>> fetchUserNfts', err)
           setOwnedNftsLoadError(true)
           processError(err, fetchUserNfts)
         })

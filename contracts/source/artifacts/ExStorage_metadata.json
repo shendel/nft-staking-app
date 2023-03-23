@@ -1,0 +1,191 @@
+{
+	"compiler": {
+		"version": "0.8.12+commit.f00d7308"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_mainStorage",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_scopeKey",
+						"type": "string"
+					}
+				],
+				"name": "clearScopeData",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_scopeKey",
+						"type": "string"
+					}
+				],
+				"name": "getScopeData",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "key",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "info",
+								"type": "string"
+							}
+						],
+						"internalType": "struct ExStorage.ScopeKeyData[]",
+						"name": "",
+						"type": "tuple[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_scopeKey",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_key",
+						"type": "string"
+					}
+				],
+				"name": "getScopeKeyData",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "mainStorage",
+				"outputs": [
+					{
+						"internalType": "contract IStorage",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_scopeKey",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_key",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_data",
+						"type": "string"
+					}
+				],
+				"name": "setScopeKeyData",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_scopeKey",
+						"type": "string"
+					},
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "key",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "info",
+								"type": "string"
+							}
+						],
+						"internalType": "struct ExStorage.ScopeKeyData[]",
+						"name": "_keyToData",
+						"type": "tuple[]"
+					}
+				],
+				"name": "setScopeKeysData",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"source/ExStorage.sol": "ExStorage"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 99999
+		},
+		"remappings": []
+	},
+	"sources": {
+		"source/ExStorage.sol": {
+			"keccak256": "0x042c3184031574a3e96e41995a52d0267fb0e5b449b468b2b4bc50705785dac5",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e5ac5017defead57f6b2947cfdfcc21a531953352178d12f5346bfe2bd571cb7",
+				"dweb:/ipfs/QmWrZBY5CZVf3LsnKrMqSoqEesqNiKa53Kq2Cf5Vh9mMAK"
+			]
+		}
+	},
+	"version": 1
+}

@@ -314,6 +314,19 @@
 		"stateMutability": "view",
 		"type": "function"
 	},
+  {
+    "inputs": [],
+    "name": "baseExtension",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
 	{
 		"inputs": [],
 		"name": "MAX_SUPPLY",

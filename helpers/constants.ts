@@ -38,7 +38,7 @@ export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const MULTICALL_CONTRACTS = {
   1: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
   4: '0x42Ad527de7d4e9d9d011aC45B31D8551f8Fe9821',
-  5: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
+  5: '0xf0cc52809a6c63dab849e368b0620db17cb41cf8', // v2 '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
   100: '0x67dA5f2FfaDDfF067AB9d5F025F8810634d84287',
   77: '0x2D0Cf59485baa2A105541b9bf850E06C071AFab8',
   137: '0x02817C1e3543c2d908a590F5dB6bc97f933dB4BD',
@@ -71,6 +71,7 @@ export const AVAILABLE_NETWORKS_INFO = [
     isTestnet: false,
     nativeCurrency: CURRENCIES.BNB
   },
+  /*
   {
     slug: 'matic_testnet',
     chainName: 'Polygon - Testnet (mumbai)',
@@ -81,6 +82,7 @@ export const AVAILABLE_NETWORKS_INFO = [
     isTestnet: true,
     nativeCurrency: CURRENCIES.MATIC
   },
+  */
   {
     slug: 'matic_mainnet',
     chainName: 'Polygon',
@@ -91,6 +93,7 @@ export const AVAILABLE_NETWORKS_INFO = [
     isTestnet: false,
     nativeCurrency: CURRENCIES.MATIC
   },
+  /*
   {
     slug: 'eth_rinkeby',
     chainName: 'Ethereum - Testnet (Rinkeby)',
@@ -101,6 +104,7 @@ export const AVAILABLE_NETWORKS_INFO = [
     isTestnet: true,
     nativeCurrency: CURRENCIES.ETH
   },
+  */
   {
     slug: 'eth_goerli',
     chainName: 'Ethereum - Testnet (Goerli)',
@@ -121,6 +125,7 @@ export const AVAILABLE_NETWORKS_INFO = [
     isTestnet: false,
     nativeCurrency: CURRENCIES.ETH
   },
+  /*
   {
     slug: 'arbeth_testnet',
     chainName: 'Arbitrum - Testnet (Rinkeby)',
@@ -131,6 +136,7 @@ export const AVAILABLE_NETWORKS_INFO = [
     isTestnet: true,
     nativeCurrency: CURRENCIES.ARBETH
   },
+  */
   {
     slug: 'arbeth_mainnet',
     chainName: 'Arbitrum',
@@ -141,6 +147,7 @@ export const AVAILABLE_NETWORKS_INFO = [
     isTestnet: false,
     nativeCurrency: CURRENCIES.ARBETH
   },
+  /*
   {
     slug: 'xdai_testnet',
     chainName: 'xDai - Testnet (Sokol)',
@@ -151,6 +158,7 @@ export const AVAILABLE_NETWORKS_INFO = [
     isTestnet: true,
     nativeCurrency: CURRENCIES.XDAI
   },
+  */
   {
     slug: 'xdai_mainnet',
     chainName: 'Gnosis (xDai)',
@@ -161,6 +169,7 @@ export const AVAILABLE_NETWORKS_INFO = [
     isTestnet: false,
     nativeCurrency: CURRENCIES.XDAI
   },
+  /*
   {
     slug: 'fantom_testnet',
     chainName: 'Fantom testnet',
@@ -171,6 +180,7 @@ export const AVAILABLE_NETWORKS_INFO = [
     isTestnet: true,
     nativeCurrency: CURRENCIES.FTM
   },
+  */
   {
     slug: 'fantom_mainnet',
     chainName: 'Fantom',

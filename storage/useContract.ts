@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import Web3 from 'web3'
 import STORAGE from '../contracts/Storage.json'
+import EX_STORAGE from "../contracts/source/artifacts/ExStorage.json"
 import { getStorageInfo } from "./"
 
 export function useStorageContract(): Contract | null {
@@ -18,4 +19,20 @@ export function useStorageContract(): Contract | null {
 
   return null
 
+}
+
+export function useExStorageContract(): Contract | null {
+  try {
+    const {
+      storageRpc,
+      exStorageAddress,
+    } = getStorageInfo()
+    const web3 = new Web3(storageRpc)
+
+    return new web3.eth.Contract(EX_STORAGE.abi, exStorageAddress)
+  } catch (error) {
+    console.error('Failed to get ExStorage contract', error)
+  }
+
+  return null
 }

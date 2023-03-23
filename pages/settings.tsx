@@ -6,6 +6,7 @@ import TabNftCollection from "../components/settings/TabNftCollection"
 import TabDesign from "../components/settings/TabDesign"
 import TabTexts from "../components/settings/TabTexts"
 import TabMenu from "../components/settings/TabMenu"
+import TabMintSettings from "../components/settings/TabMintSettings"
 
 import useStorage from "../storage/"
 import { useEffect, useState } from "react"
@@ -15,11 +16,14 @@ import {
   doConnectWithMetamask,
   isMetamaskConnected,
   getCurrentChainId,
+  getActiveChainId,
   onBlockchainChanged,
 } from "../helpers/setupWeb3"
 import { calcSendArgWithFee } from "../helpers/calcSendArgWithFee"
 
 import { getStorageInfo } from "../storage"
+import saveExStorageData from "../storage/saveExStorageData"
+
 import STORAGE_JSON from "../contracts/Storage.json"
 import DurationPicker from "../components/DurationPicker"
 import { getCurrentDomain } from "../helpers/getCurrentDomain"
@@ -35,6 +39,7 @@ import delay from "../helpers/delay"
 import { toWei, fromWei } from "../helpers/wei"
 import openInTab from "../components/openInTab"
 import { textsGroups } from "../helpers/textsGroups"
+import SwitchNetworkAndCall from "../components/SwitchNetworkAndCall"
 
 
 import {
@@ -48,8 +53,9 @@ const storageChainId = 5
 const storageAddress = '0xafb8f27df1f629432a47214b4e1674cbcbdb02df'
 */
 const settingsTabs = {
-  main: `Main settings`,
   nftconfig: `NFT collection`,
+  mintconfig: `Mint settings`,
+  main: `Farm settings`,
   mainmenu: `Menu Items`,
   texts: `Edit texts`,
   design: `Design`,
@@ -172,7 +178,43 @@ const Settings: NextPage = (props) => {
   const [storageContract, setStorageContract] = useState(false)
   const [isStorageSave, setIsStorageSave] = useState(false)
 
+  const saveExStorageConfig = async (options) => {
+    const {
+      onBegin,
+      onReady,
+      onError,
+      key,
+      data,
+    } = {
+      onBegin: () => {},
+      onReady: () => {},
+      onError: () => {},
+      ...options,
+    }
 
+    if (isStorageSave) {
+      addNotify(`Storage already saving...`, `error`)
+      return
+    }
+    setIsStorageSave(true)
+    saveExStorageData({
+      activeWeb3,
+      key,
+      data,
+      onBegin: () => {
+        onBegin()
+      },
+      onReady: () => {
+        setIsStorageSave(false)
+        onReady()
+      },
+      onError: () => {
+        setIsStorageSave(false)
+        onError()
+      }
+    })
+  }
+  
   const saveStorageConfig = async (options) => {
     const {
       onBegin,
@@ -236,6 +278,7 @@ const Settings: NextPage = (props) => {
       }
     }
     console.log('>> do save', getCurrentChainId() !== storageChainId, getCurrentChainId(), storageChainId)
+    /*
     if (!getCurrentChainId(storageChainId)) {
       const storageChainInfo = CHAIN_INFO(storageChainId)
       openConfirmWindow({
@@ -250,8 +293,9 @@ const Settings: NextPage = (props) => {
         okLabel: `Switch`,
       })
     } else {
+    */
       _doSave()
-    }
+    //}
   }
 
   const getActiveChain = () => {
@@ -454,10 +498,10 @@ const Settings: NextPage = (props) => {
   const [ isDeployingNFTDemo, setIsDeployingNFTDemo ] = useState(false)
 
   const doDeployDemoNFT = () => {
-    const activeChainInfo = CHAIN_INFO(activeChainId)
+    const activeChainInfo = CHAIN_INFO(getActiveChainId())
     openConfirmWindow({
       title: `Deploying Demo NFT`,
-      message: `Deploy Demo NFT at ${activeChainInfo.chainName} (${activeChainId})?`,
+      message: `Deploy Demo NFT at ${activeChainInfo.chainName} (${getActiveChainId()})?`,
       okLabel: `Deploy`,
       onConfirm: () => {
         setIsDeployingNFTDemo(true)
@@ -470,7 +514,7 @@ const Settings: NextPage = (props) => {
             setNewNftCollection(contractAddress)
             setIsDeployingNFTDemo(false)
             addNotify(`Demo NFT Collection deployed`, `success`)
-            _doFetchNFTInfo(contractAddress, newChainId || activeChainId)
+            _doFetchNFTInfo(contractAddress, getActiveChainId())
           },
           onTrx: (hash) => {
             addNotify(`NFT Collection deploy TX ${hash}...`, `success`)
@@ -497,10 +541,10 @@ const Settings: NextPage = (props) => {
   const [ canDeploy, setCanDeploy ] = useState(false)
 
   const doDeployFarmContract = () => {
-    const activeChainInfo = CHAIN_INFO(activeChainId)
+    const activeChainInfo = CHAIN_INFO(getActiveChainId())
     openConfirmWindow({
       title: `Deploy Farm contract`,
-      message: `Deploy Farm contract at ${activeChainInfo.chainName} (${activeChainId})?`,
+      message: `Deploy Farm contract at ${activeChainInfo.chainName} (${getActiveChainId()})?`,
       okLabel: `Deploy`,
       onConfirm: () => {
         setIsFarmContractDeploying(true)
@@ -667,10 +711,18 @@ const Settings: NextPage = (props) => {
           </div>
         )}
         <div className={styles.actionsRow}>
-          <button disabled={!canDeploy || farmInfoFetching || isFarmContractDeploying} className={styles.secondaryButton} onClick={doDeployFarmContract}>
+          {!rewardTokenFetched && (
+            <b className={styles.hasError}>Fetch raward token info first</b>
+          )}
+          <SwitchNetworkAndCall
+            chainId={newChainId}
+            className={styles.adminButton}
+            disabled={!canDeploy || farmInfoFetching || isFarmContractDeploying}
+            onClick={doDeployFarmContract} action={`Deploy farm`}
+          >
             {isFarmContractDeploying ? `Deploying Farm contract...` : `Deploy new farm contract`}
-          </button>
-          <button disabled={isFarmContractDeploying} className={styles.secondaryButton} onClick={doHideFarmDeploy}>
+          </SwitchNetworkAndCall>
+          <button disabled={isFarmContractDeploying} className={styles.adminButton} onClick={doHideFarmDeploy}>
             Cancel
           </button>
         </div>
@@ -765,12 +817,16 @@ const Settings: NextPage = (props) => {
               placeholder: `Enter address of NFT collection for stack`,
               buttons: (
                 <>
-                  <button disabled={isDeployingNFTDemo || isNFTInfoFetching} className={styles.secondaryButton} onClick={doFetchNFTInfo}>
+                  <button disabled={isDeployingNFTDemo || isNFTInfoFetching} className={styles.adminButton} onClick={doFetchNFTInfo}>
                     {isNFTInfoFetching ? `Fetching NFT info` : `Fetch NFT info`}
                   </button>
-                  <button disabled={isDeployingNFTDemo || isNFTInfoFetching} className={styles.secondaryButton} onClick={doDeployDemoNFT}>
+                  <SwitchNetworkAndCall chainId={newChainId} className={styles.adminButton}
+                    disabled={isDeployingNFTDemo || isNFTInfoFetching}
+                    onClick={() => { doDeployDemoNFT.apply(this) }}
+                    action={`Deploy Demo NFT collection`}
+                  >
                     {isDeployingNFTDemo ? `Deploying Demo NFT` : `Deploy Demo NFT collection`}
-                  </button>
+                  </SwitchNetworkAndCall>
                 </>
               )
             })}
@@ -815,7 +871,7 @@ const Settings: NextPage = (props) => {
               onChange: doSetRewardToken,
               placeholder: `Enter address of Token for reward`,
               buttons: (
-                <button disabled={rewardTokenFetching} className={styles.secondaryButton} onClick={fetchRewardTokenInfo}>
+                <button disabled={rewardTokenFetching} className={styles.adminButton} onClick={fetchRewardTokenInfo}>
                   {rewardTokenFetching ? `Fetching...` : `Fetch reward token info`}
                 </button>
               )
@@ -868,10 +924,10 @@ const Settings: NextPage = (props) => {
               placeholder: `Enter address of Farm contract or deploy new`,
               buttons: (
                 <>
-                  <button disabled={farmInfoFetching || isFarmContractDeploying} className={styles.secondaryButton} onClick={doFetchFarmInfo}>
+                  <button disabled={farmInfoFetching || isFarmContractDeploying} className={styles.adminButton} onClick={doFetchFarmInfo}>
                     {(farmInfoFetching) ? `Fetching...` : `Fetch Farm info`}
                   </button>
-                  <button disabled={farmInfoFetching || isFarmContractDeploying} className={styles.secondaryButton} onClick={doShowFarmDeploy}>
+                  <button disabled={farmInfoFetching || isFarmContractDeploying} className={styles.adminButton} onClick={doShowFarmDeploy}>
                     Deploy new Farm
                   </button>
                 </>
@@ -896,12 +952,12 @@ const Settings: NextPage = (props) => {
               {(farmBalanceFetched && farmBalance.normalized !== undefined && rewardTokenInfo && rewardTokenInfo.symbol) ? (
                 <>
                   <span>{farmBalance.normalized} {rewardTokenInfo.symbol}</span>
-                  <button disabled={farmBalanceFetching} className={styles.secondaryButton} onClick={doFetchFarmBalance}>
+                  <button disabled={farmBalanceFetching} className={styles.adminButton} onClick={doFetchFarmBalance}>
                     {farmBalanceFetching ? `Fetching...` : `Refresh`}
                   </button>
                 </>
               ) : (
-                <button disabled={farmBalanceFetching} className={styles.secondaryButton} onClick={doFetchFarmBalance}>
+                <button disabled={farmBalanceFetching} className={styles.adminButton} onClick={doFetchFarmBalance}>
                   {farmBalanceFetching ? `Fetching farm balance...` : `Fetch farm balance`}
                 </button>
               )}
@@ -944,9 +1000,9 @@ const Settings: NextPage = (props) => {
           </div>
         )}
         <div className={styles.adminFormBottom}>
-          <button disabled={isStorageSave} className={`${styles.mainButton} primaryButton`} onClick={doSaveMainConfig} >
-            Save changes
-          </button>
+          <SwitchNetworkAndCall chainId={`STORAGE`} icon="save" className={styles.adminMainButton} disabled={isStorageSave} onClick={doSaveMainConfig} action={`Save to storage config`} >
+            {isStorageSave ? `Saving...` : `Save to storage config`}
+          </SwitchNetworkAndCall>
         </div>
       </div>
     )
@@ -955,6 +1011,7 @@ const Settings: NextPage = (props) => {
   const _tabOptions = {
     setDoReloadStorage,
     saveStorageConfig,
+    saveExStorageConfig,
     openConfirmWindow,
     addNotify,
     getActiveChain,
@@ -966,7 +1023,7 @@ const Settings: NextPage = (props) => {
   const tabDesign = new TabDesign(_tabOptions)
   const tabTexts = new TabTexts(_tabOptions)
   const tabMenu = new TabMenu(_tabOptions)
-
+  const tabMintSettings = new TabMintSettings(_tabOptions)
   /* ------------------------------------------- */
   const renderActiveChainInfo = () => {
     const chainInfo = CHAIN_INFO(activeChainId)
@@ -1036,6 +1093,7 @@ const Settings: NextPage = (props) => {
                       {activeTab === `main` && renderMainTab()}
                       {activeTab === `mainmenu` && tabMenu.render()}
                       {activeTab === `nftconfig` && tabNftCollection.render()}
+                      {activeTab === `mintconfig` && tabMintSettings.render()}
                       {activeTab === `texts` && tabTexts.render()}
                       {activeTab === `design` && tabDesign.render()}
                       {/* -------------------------------------------------*/ }
