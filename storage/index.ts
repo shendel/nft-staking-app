@@ -12,7 +12,7 @@ const storageAddressByChainId = {
 
 const exStorageAddressByChainId = {
   5: '0xCFd685E34133b4bd0eB2Dd3CE501f37587ECb86c',
-  56: ''
+  56: '0x05b12174a320967698f1e432793d6f5b3b83bb7c'
 }
 
 const storageChainIdMainnet = 56

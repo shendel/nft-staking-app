@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.18+commit.87f61d96"
+		"version": "0.8.20+commit.a1b79de6"
 	},
 	"language": "Solidity",
 	"output": {
@@ -43,9 +43,9 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"source/ERC721r.sol": "ERC165"
+			"source/StakeNFT.sol": "ERC165"
 		},
-		"evmVersion": "paris",
+		"evmVersion": "shanghai",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -57,12 +57,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"source/ERC721r.sol": {
-			"keccak256": "0x0ebe8fb30e49d178d78a092790036dc08a1125340a578d5e39f410c94c9d2adf",
+		"source/StakeNFT.sol": {
+			"keccak256": "0xfc39e2298643d469edd6b17e3e1acc2ee816ad071649748b49441fd0d60fd1a1",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://bd138d2d2ab313b5710d391541ba9c58b42b531aa4c3bc54ae614f09f76d4f1d",
-				"dweb:/ipfs/QmY7fvFymc1uFBC39hG2JYNGGFTcZh6pdL63WwdUt2GXL8"
+				"bzz-raw://6e4b9a76119a5d37f106c8bee010107ee0efc628f821df7eab44b5fbebe16b0e",
+				"dweb:/ipfs/QmbNJeFogqBAdj7kQDCewAWtcQE42mY6iqu1M8y6j2hjcj"
 			]
 		}
 	},

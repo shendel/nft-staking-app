@@ -60,6 +60,8 @@ export default function TabNftCollection(options) {
   const [nftIsDeployed, setNftIsDeployed] = useState(false)
   const [nftIsDeploying, setNftIsDeploying] = useState(false)
 
+  const [nftBaseUri, setNftBaseUri] = useState("ipfs://")
+  
   const openNftDeploy = () => {
     setNftDeployOpened(true)
   }
@@ -167,20 +169,20 @@ export default function TabNftCollection(options) {
     /*
         string memory __symbol,
         string memory __name,
+        string memory __baseUri,
         uint256 __maxSupply,
         uint256 __mintPrice,
-        uint256 __ownMintPrice,
         bool __allowTrade,
         bool __allowUserSale,
         uint __tradeFee,
         bool __allowMint,
-        bool __allowOwnMint,
         address[] memory __allowedERC20
     */
     const deployOptions = {
       activeWeb3,
       symbol: nftSymbol,
       name: nftName,
+      baseURI: nftBaseUri,
       maxSupply: nftMaxSupply,
       allowTrade: (nftAllowTrade == 1),
       allowUserSale: (nftAllowUserSale == 1),
@@ -396,6 +398,15 @@ export default function TabNftCollection(options) {
                   
                 </div>
                 <div className={styles.infoRow}>
+                  <label>Base URI:</label>
+                  <span>
+                    <input type="text" value={nftBaseUri} onChange={(e) => { setNftBaseUri(e.target.value) }} />
+                    <div>
+                      <b>Specify baseURI for NFT. Json files must be in BaseUri/TokenId.json</b>
+                    </div>
+                  </span>
+                </div>
+                <div className={styles.infoRow}>
                   <label>Max supply:</label>
                   <span>
                     <input type="number" value={nftMaxSupply} onChange={(e) => { setNftMaxSupply(e.target.value) }} />
@@ -472,6 +483,7 @@ export default function TabNftCollection(options) {
                     </span>
                   </div>
                 )}
+                {/*
                 <div className={styles.infoRow}>
                   <label>Allow user own mint:</label>
                   <div>
@@ -498,6 +510,7 @@ export default function TabNftCollection(options) {
                     </div>
                   </div>
                 )}
+                */}
                 <div className={styles.actionsRow}>
                   <SwitchNetworkAndCall
                     chainId={nftChainId}
