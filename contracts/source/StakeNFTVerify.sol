@@ -2336,6 +2336,9 @@ contract StakeNFT is ERC721URIStorage, Ownable {
     Counters.Counter private _tokenIds;
     uint256 public MAX_SUPPLY = 8888;
 
+    string public baseURI = "";
+    string public jsonExtension = ".json";
+
     uint public version = 1;
     bool constant public isNFTStakeToken = true;
     bool private _allowTrade = true;
@@ -2364,6 +2367,8 @@ contract StakeNFT is ERC721URIStorage, Ownable {
     constructor(
         string memory __symbol,
         string memory __name,
+        string memory __baseUri,
+        string memory __jsonExtenstion,
         uint256 __maxSupply,
         uint256 __mintPrice,
         uint256 __ownMintPrice,

@@ -20,13 +20,13 @@ export const defMenus = [
     link: '',
     blank: false
   },
+  */
   {
     title: 'Mint Random NFT',
     target: 'MINT',
     link: '',
     blank: false
   },
-  */
   {
     title: 'Marketplace',
     target: 'MARKETPLACE',

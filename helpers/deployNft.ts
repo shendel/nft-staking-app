@@ -9,6 +9,7 @@ const deployNft = (options) => {
       symbol,
       name,
       maxSupply,
+      baseURI,
       allowTrade,
       allowUserSale,
       allowedERC20,
@@ -47,27 +48,25 @@ const deployNft = (options) => {
 
         string memory __symbol,
         string memory __name,
+        string memory __baseUri,
         uint256 __maxSupply,
         uint256 __mintPrice,
-        uint256 __ownMintPrice,
         bool __allowTrade,
         bool __allowUserSale,
         uint __tradeFee,
         bool __allowMint,
-        bool __allowOwnMint,
         address[] memory __allowedERC20
 */
         const _arguments = [
           symbol,
           name,
+          baseURI,
           maxSupply,
           mintPrice,
-          mintOwnPrice,
           allowTrade,
           allowUserSale,
           tradeFee,
           allowMint,
-          allowMintOwn,
           allowedERC20
         ]
 

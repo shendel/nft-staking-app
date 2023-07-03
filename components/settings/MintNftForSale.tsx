@@ -70,7 +70,7 @@ export default function MintNftForSale(options) {
 
   const { nativeCurrency } = CHAIN_INFO(chainId)
 
-  const doMintNtf = () => {
+  const _doMintNtf = () => {
     openConfirmWindow({
       title: `Confirm action`,
       message: `Mint NFT for sale?`,
@@ -131,6 +131,54 @@ export default function MintNftForSale(options) {
       }
     })
   }
+  const doMintNtf = () => {
+    openConfirmWindow({
+      title: `Confirm action`,
+      message: `Mint NFT for sale?`,
+      onConfirm: () => {
+        setIsNftMinting(true)
+        const { activeWeb3 } = getActiveChain()
+        callNftMethod({
+          activeWeb3,
+          contractAddress: nftAddress,
+          method: `mintNFTForSell`,
+          args: [
+            [""],
+            [tokenCurrency],
+            [toWei(
+              tokenPrice,
+              (tokenCurrency == ZERO_ADDRESS)
+                ? nativeCurrency.decimals
+                : allowedERC20Info[tokenCurrency].decimals
+            )],
+            ZERO_ADDRESS
+          ],
+          onTrx: (txHash) => {
+            addNotify(`Mint NFT for sale TX ${txHash}`, `success`)
+            console.log('>> onTrx', txHash)
+          },
+          onSuccess: (receipt) => {
+            addNotify(`Broadcast Mint NFT TX`, `success`)
+            console.log('>> onSuccess', receipt)
+          },
+          onError: (err) => {
+            addNotify(`Fail mint NFT. ${err.message ? err.message : ''}`, `error`)
+            setIsNftMinting(false)
+            setNftMetadataUploaded(false)
+            console.log('>> onError', err)
+          },
+          onFinally: (answer) => {
+            const tokenId = answer?.events?.Mint?.returnValues?.tokenId
+            addNotify(`NFT #${tokenId} is minted!`, `success`)
+            setIsNftMinting(false)
+            setNftMetadataUploaded(false)
+            //setMetadata({})
+            console.log('>> onFinally', answer)
+          }
+        })
+      }
+    })
+  }
 
   
   const tabs = new FormTabs({
@@ -149,6 +197,7 @@ export default function MintNftForSale(options) {
             
             {isAllowedERC20Fetched ? (
               <div className={styles.subFormInfo}>
+                {/*
                 <AdminNftMetadataGenerator
                   metadata={nftMetadata}
                   setMetadata={setNftMetadata}
@@ -156,6 +205,7 @@ export default function MintNftForSale(options) {
                   isUploading={nftMetadataUploading}
                   isUploaded={nftMetadataUploaded}
                 />
+                */}
                 <hr />
                 {allowedERC20 && allowedERC20.length > 0 && (
                   <div className={styles.infoRow}>
@@ -209,7 +259,7 @@ export default function MintNftForSale(options) {
                   <SwitchNetworkAndCall
                     chainId={chainId}
                     className={styles.adminSubButton}
-                    disabled={!nftMetadataValid || hasTokenPriceError}
+                    disabled={/*!nftMetadataValid || */hasTokenPriceError}
                     onClick={doMintNtf}
                     action={`Mint NFT`} >
                     {isNftMinting ? `Minting NFT for sale...` : `Mint NFT for sale`}

@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.18+commit.87f61d96"
+		"version": "0.8.19+commit.7dd6d404"
 	},
 	"language": "Solidity",
 	"output": {
@@ -139,7 +139,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "recipient",
+						"name": "to",
 						"type": "address"
 					},
 					{
@@ -163,12 +163,12 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "sender",
+						"name": "from",
 						"type": "address"
 					},
 					{
 						"internalType": "address",
-						"name": "recipient",
+						"name": "to",
 						"type": "address"
 					},
 					{
@@ -190,6 +190,7 @@
 			}
 		],
 		"devdoc": {
+			"details": "Interface of the ERC20 standard as defined in the EIP.",
 			"events": {
 				"Approval(address,address,uint256)": {
 					"details": "Emitted when the allowance of a `spender` for an `owner` is set by a call to {approve}. `value` is the new allowance."
@@ -213,10 +214,10 @@
 					"details": "Returns the amount of tokens in existence."
 				},
 				"transfer(address,uint256)": {
-					"details": "Moves `amount` tokens from the caller's account to `recipient`. Returns a boolean value indicating whether the operation succeeded. Emits a {Transfer} event."
+					"details": "Moves `amount` tokens from the caller's account to `to`. Returns a boolean value indicating whether the operation succeeded. Emits a {Transfer} event."
 				},
 				"transferFrom(address,address,uint256)": {
-					"details": "Moves `amount` tokens from `sender` to `recipient` using the allowance mechanism. `amount` is then deducted from the caller's allowance. Returns a boolean value indicating whether the operation succeeded. Emits a {Transfer} event."
+					"details": "Moves `amount` tokens from `from` to `to` using the allowance mechanism. `amount` is then deducted from the caller's allowance. Returns a boolean value indicating whether the operation succeeded. Emits a {Transfer} event."
 				}
 			},
 			"version": 1
@@ -229,7 +230,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"source/Farm.sol": "IERC20"
+			"source/StakeNFT.sol": "IERC20"
 		},
 		"evmVersion": "paris",
 		"libraries": {},
@@ -243,12 +244,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"source/Farm.sol": {
-			"keccak256": "0x4a3e9be23c367b09e6adea231412ad35b2e71efbd16613f62d4f544a8a84fea8",
-			"license": "Unlicense",
+		"source/StakeNFT.sol": {
+			"keccak256": "0xfc39e2298643d469edd6b17e3e1acc2ee816ad071649748b49441fd0d60fd1a1",
+			"license": "MIT",
 			"urls": [
-				"bzz-raw://1e58b6bc278035e6a763c7f84fade6219e82dcf7a36e4a90e8bbd455d5d5b9e0",
-				"dweb:/ipfs/QmZvVwFS5Axmf81WfEJbgyqVr89vymEHteqWZFAjiqzfAm"
+				"bzz-raw://6e4b9a76119a5d37f106c8bee010107ee0efc628f821df7eab44b5fbebe16b0e",
+				"dweb:/ipfs/QmbNJeFogqBAdj7kQDCewAWtcQE42mY6iqu1M8y6j2hjcj"
 			]
 		}
 	},
