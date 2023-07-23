@@ -21,6 +21,11 @@ export const CURRENCIES = {
     symbol: 'ETH',
     decimals: 18
   },
+  OZO: {
+    name: 'Ozone',
+    symbol: 'OZO',
+    decimals: 18
+  },
   XDAI: {
     name: "xDai",
     symbol: 'xDAI',
@@ -48,6 +53,7 @@ export const MULTICALL_CONTRACTS = {
   42161: '0x80C7DD17B01855a6D2347444a0FCC36136a314de',
   421611: '0xf27ee99622c3c9b264583dacb2cce056e194494f',
   250: '0x22D4cF72C45F8198CfbF4B568dBdB5A85e8DC0B5',
+  4000: '0x48d7ac38530697aDB91061B6D141C8c763edE565'
 }
 
 export const AVAILABLE_NETWORKS_INFO = [
@@ -190,6 +196,16 @@ export const AVAILABLE_NETWORKS_INFO = [
     blockExplorerUrls: ['https://ftmscan.com'],
     isTestnet: false,
     nativeCurrency: CURRENCIES.FTM
+  },
+  {
+    slug: 'ozone_mainnet',
+    chainName: 'OZONE',
+    chainId: '0xFA0',
+    networkVersion: 4000,
+    rpcUrls: ['https://node1.ozonechain.io'],
+    blockExplorerUrls: ['https://ozonescan.io/'],
+    isTestnet: false,
+    nativeCurrency: CURRENCIES.OZO
   },
 ];
 

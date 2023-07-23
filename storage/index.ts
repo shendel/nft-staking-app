@@ -8,15 +8,17 @@ import { CHAIN_INFO } from "../helpers/constants"
 const storageAddressByChainId = {
   5: '0xafb8f27df1f629432a47214b4e1674cbcbdb02df',
   56: '0xa7472f384339D37EfE505a1A71619212495A973A',
+  4000: '0xcE72A00dfe506Bff0398CBA51BE8853D8Cb5F099',
 }
 
 const exStorageAddressByChainId = {
   5: '0xCFd685E34133b4bd0eB2Dd3CE501f37587ECb86c',
-  56: '0x05b12174a320967698f1e432793d6f5b3b83bb7c'
+  56: '0x05b12174a320967698f1e432793d6f5b3b83bb7c',
+  4000: '0x663A8a85FaB794f95F8C098A0806bdc1D9D33d76',
 }
 
-const storageChainIdMainnet = 56
-const storageChainIdTestnet = 5
+const storageChainIdMainnet = 4000 //56
+const storageChainIdTestnet = 4000 //5
 
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
