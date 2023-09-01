@@ -273,6 +273,8 @@ const Stake: NextPage = (props) => {
 
   const fetchUserNfts = async () => {
     debugLog('do fetchUserNfts')
+    console.log(address && nftContract && mcContract && !stakedNftsLoading)
+    console.log(address, nftContract, mcContract, stakedNftsLoading)
     if (address && nftContract && mcContract && !stakedNftsLoading) {
       setOwnedNftsLoading(true)
       setOwnedNftsLoadError(false)
@@ -287,31 +289,39 @@ const Stake: NextPage = (props) => {
       } catch (err) {
         console.log('Fail fetch total supply')
       }
+      console.log('totalSupply', totalSupply)
       // MAX SUPPLY
       let maxSupplyType = `maxSupply`
       try {
+      console.log('>>> try max')
         maxSupply = await nftContract.methods.maxSupply().call()
         hasMaxSupply = true
         maxSupplyType = `maxSupply`
       } catch (err) {
         console.log('Fail fetch max supply')
-        maxSupply = await nftContract.methods.MAX_SUPPLY().call()
-        hasMaxSupply = true
-        maxSupplyType = `MAX_SUPPLY`
+        try {
+          maxSupply = await nftContract.methods.MAX_SUPPLY().call()
+          hasMaxSupply = true
+          maxSupplyType = `MAX_SUPPLY`
+        } catch (err) {
+          console.log('>>> no max supply')
+        }
       }
       console.log('hasMaxSupply', hasMaxSupply)
       console.log('hasTotalSupply', hasTotalSupply)
       console.log('maxSupply', maxSupply)
       console.log('totalSupply', totalSupply)
       if (hasMaxSupply || hasTotalSupply) {
+        console.log('>>> do fetch')
         setCanListOwnedNfts(true)
         const ownerCalls = []
-        for (let checkTokenId = 1; checkTokenId<=(maxSupply); checkTokenId++) {
+        for (let checkTokenId = 1; checkTokenId<=(maxSupply || totalSupply); checkTokenId++) {
           ownerCalls.push({
             target: nftDropContractAddress,
             callData: ERC721_INTERFACE.encodeFunctionData('ownerOf', [checkTokenId])
           })
         }
+        console.log(ownerCalls)
         mcContract.methods.tryAggregate(false, ownerCalls).call().then((ownerAnswers) => {
           const _userTokenIds = []
           ownerAnswers.forEach((retData, _tokenId) => {
