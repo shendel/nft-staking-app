@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.19+commit.7dd6d404"
+		"version": "0.8.18+commit.87f61d96"
 	},
 	"language": "Solidity",
 	"output": {
@@ -239,7 +239,7 @@
 					},
 					{
 						"internalType": "bool",
-						"name": "approved",
+						"name": "_approved",
 						"type": "bool"
 					}
 				],
@@ -292,7 +292,6 @@
 			}
 		],
 		"devdoc": {
-			"details": "Required interface of an ERC721 compliant contract.",
 			"events": {
 				"Approval(address,address,uint256)": {
 					"details": "Emitted when `owner` enables `approved` to manage the `tokenId` token."
@@ -334,7 +333,7 @@
 					"details": "Returns true if this contract implements the interface defined by `interfaceId`. See the corresponding https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[EIP section] to learn more about how these ids are created. This function call must use less than 30 000 gas."
 				},
 				"transferFrom(address,address,uint256)": {
-					"details": "Transfers `tokenId` token from `from` to `to`. WARNING: Note that the caller is responsible to confirm that the recipient is capable of receiving ERC721 or else they may be permanently lost. Usage of {safeTransferFrom} prevents loss, though the caller must understand this adds an external call which potentially creates a reentrancy vulnerability. Requirements: - `from` cannot be the zero address. - `to` cannot be the zero address. - `tokenId` token must be owned by `from`. - If the caller is not `from`, it must be approved to move this token by either {approve} or {setApprovalForAll}. Emits a {Transfer} event."
+					"details": "Transfers `tokenId` token from `from` to `to`. WARNING: Usage of this method is discouraged, use {safeTransferFrom} whenever possible. Requirements: - `from` cannot be the zero address. - `to` cannot be the zero address. - `tokenId` token must be owned by `from`. - If the caller is not `from`, it must be approved to move this token by either {approve} or {setApprovalForAll}. Emits a {Transfer} event."
 				}
 			},
 			"version": 1
@@ -347,7 +346,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"source/StakeNFT.sol": "IERC721"
+			"source/Marketplace.sol": "IERC721"
 		},
 		"evmVersion": "paris",
 		"libraries": {},
@@ -361,12 +360,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"source/StakeNFT.sol": {
-			"keccak256": "0xfc39e2298643d469edd6b17e3e1acc2ee816ad071649748b49441fd0d60fd1a1",
+		"source/Marketplace.sol": {
+			"keccak256": "0x96592ed31474210ef6ef9b446daf8c9bca2a569d711a45c0002529c7193502c7",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://6e4b9a76119a5d37f106c8bee010107ee0efc628f821df7eab44b5fbebe16b0e",
-				"dweb:/ipfs/QmbNJeFogqBAdj7kQDCewAWtcQE42mY6iqu1M8y6j2hjcj"
+				"bzz-raw://d5ec1a996b870845a558032f6419c93b18eaca9ac9dd9d8e62a334808a3d56fa",
+				"dweb:/ipfs/QmNtwb6CdJ9qoj3RpafnconLFRXnuw6BbJHjFMgV4dUXFb"
 			]
 		}
 	},

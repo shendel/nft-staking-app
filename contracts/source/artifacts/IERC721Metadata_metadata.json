@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.19+commit.7dd6d404"
+		"version": "0.8.18+commit.87f61d96"
 	},
 	"language": "Solidity",
 	"output": {
@@ -402,7 +402,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"source/StakeNFT.sol": "IERC721Metadata"
+			"source/Marketplace.sol": "IERC721Metadata"
 		},
 		"evmVersion": "paris",
 		"libraries": {},
@@ -416,12 +416,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"source/StakeNFT.sol": {
-			"keccak256": "0xfc39e2298643d469edd6b17e3e1acc2ee816ad071649748b49441fd0d60fd1a1",
+		"source/Marketplace.sol": {
+			"keccak256": "0x0058a7a651187217a2fdb19ce1da4d45e81509c81fa06e252ca66426ef5a1e27",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://6e4b9a76119a5d37f106c8bee010107ee0efc628f821df7eab44b5fbebe16b0e",
-				"dweb:/ipfs/QmbNJeFogqBAdj7kQDCewAWtcQE42mY6iqu1M8y6j2hjcj"
+				"bzz-raw://3c5e30af061b9bf74c6fc21f6ea6ee652363bd15277aee0f5db1e308456837ef",
+				"dweb:/ipfs/QmS9FB76Cm9qX1MNpqyJeXLQTueevia8jpXK8FTBaxio1m"
 			]
 		}
 	},

@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.19+commit.7dd6d404"
+		"version": "0.8.18+commit.87f61d96"
 	},
 	"language": "Solidity",
 	"output": {
@@ -351,7 +351,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"source/StakeNFT.sol": "ERC20"
+			"source/Marketplace.sol": "ERC20"
 		},
 		"evmVersion": "paris",
 		"libraries": {},
@@ -365,12 +365,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"source/StakeNFT.sol": {
-			"keccak256": "0xfc39e2298643d469edd6b17e3e1acc2ee816ad071649748b49441fd0d60fd1a1",
+		"source/Marketplace.sol": {
+			"keccak256": "0x945a24a1818581123b60fd1b03dbc803894e36a4d692bb47d2c8e21965590f65",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://6e4b9a76119a5d37f106c8bee010107ee0efc628f821df7eab44b5fbebe16b0e",
-				"dweb:/ipfs/QmbNJeFogqBAdj7kQDCewAWtcQE42mY6iqu1M8y6j2hjcj"
+				"bzz-raw://3fb7d7f1a414dd809ca5d4d0f99b72e890a89c0b8c326fdb7d9e07e66832a9a1",
+				"dweb:/ipfs/Qmd5Vyz4Qck8uZRcziJSqD1Vj841XNCszacf8D71ETNwDF"
 			]
 		}
 	},
