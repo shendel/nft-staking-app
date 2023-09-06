@@ -49,11 +49,10 @@ const MarketplaceV2: NextPage = (props) => {
   } = props
 
   
-  const [ chainId, setChainId ] = useState(storageData?.chainId)
-  const [ nftDropContractAddress, setNftDropContractAddress ] = useState(storageData?.nftCollection)
+  const [ chainId, setChainId ] = useState(storageData?.marketplaceChainId)
+  const [ marketplaceContract, setMarketplaceContract ] = useState(storageData?.marketplaceContract)
 
-  const marketplaceContract = '0x2c66b05C29a92Ba67ae8B569529BB03D061B949E'
-  console.log('>>> nftDropContractAddress', nftDropContractAddress)
+  console.log('>>> marketplaceContract', marketplaceContract)
   
   const [ nftInfo, setNftInfo ] = useState({})
   const [ nftInfoFetched, setNftInfoFetched ] = useState(false)
@@ -435,15 +434,15 @@ const MarketplaceV2: NextPage = (props) => {
         }
       }
     }
-  }, [ chainId, nftDropContractAddress])
+  }, [ chainId, marketplaceContract])
   
   useEffect(() => {
     if (storageData
-      && storageData.chainId
-      && storageData.nftCollection
+      && storageData.marketplaceChainId
+      && storageData.marketplaceContract
     ) {
-      setChainId(storageData.chainId)
-      //setNftDropContractAddress(storageData.nftCollection)
+      setChainId(storageData.marketplaceChainId)
+      setMarketplaceContract(storageData.marketplaceContract)
     }
   }, [storageData])
 
@@ -451,7 +450,7 @@ const MarketplaceV2: NextPage = (props) => {
     if (activeWeb3 && chainId && marketplaceContract) {
       initOnWeb3Ready()
     }
-  }, [activeWeb3, chainId, nftDropContractAddress])
+  }, [activeWeb3, chainId, marketplaceContract])
 
 
   const connectWithMetamask = async () => {

@@ -12,7 +12,8 @@ export default function adminFormRow(options) {
     hasError,
     errorText,
     beforeDesc,
-    afterDesc
+    afterDesc,
+    subForm
   } = {
     ...options
   }
@@ -25,7 +26,7 @@ export default function adminFormRow(options) {
   }
 
   return (
-    <div className={`${styles.adminFormInputHolder} ${(hasError) ? styles.hasError : ''}`}>
+    <div className={`${(subForm) ? styles.infoRow : styles.adminFormInputHolder} ${(hasError) ? styles.hasError : ''}`}>
       {type === 'list' ? (
         <>
           <label>{label}: ({value})</label>

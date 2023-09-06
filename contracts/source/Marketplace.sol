@@ -1445,13 +1445,14 @@ contract Marketplace is Ownable, Pausable {
 
     constructor(
         address _nft,
+        address __feeReceiver,
         uint __tradeFee,
         address[] memory __allowedERC20
     ) {
         marketNft = IERC721(_nft);
         _tradeFee = __tradeFee;
         _allowedERC20 = __allowedERC20;
-        _feeReceiver = msg.sender;
+        _feeReceiver = (__feeReceiver == address(0)) ? msg.sender : __feeReceiver;
     }
 
     function getFeeReceiver() public view returns(address) {

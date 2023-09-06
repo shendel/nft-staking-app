@@ -7,6 +7,7 @@ import TabDesign from "../components/settings/TabDesign"
 import TabTexts from "../components/settings/TabTexts"
 import TabMenu from "../components/settings/TabMenu"
 import TabMintSettings from "../components/settings/TabMintSettings"
+import TabMarketplace from "../components/settings/TabMarketplace"
 
 import useStorage from "../storage/"
 import { useEffect, useState } from "react"
@@ -54,6 +55,7 @@ const storageAddress = '0xafb8f27df1f629432a47214b4e1674cbcbdb02df'
 */
 const settingsTabs = {
   nftconfig: `NFT collection`,
+  marketplace: `Marketplace`,
   mintconfig: `Mint settings`,
   main: `Farm settings`,
   mainmenu: `Menu Items`,
@@ -1018,12 +1020,21 @@ const Settings: NextPage = (props) => {
     storageDesign,
     storageTexts,
     storageData,
+    activeAccount: address,
     storageMenu
   }
   const tabDesign = new TabDesign(_tabOptions)
   const tabTexts = new TabTexts(_tabOptions)
   const tabMenu = new TabMenu(_tabOptions)
+  const tabMarketplace = new TabMarketplace(_tabOptions)
   const tabMintSettings = new TabMintSettings(_tabOptions)
+  
+  useEffect(() => {
+    tabMarketplace.updateState({
+      activeAccount: address,
+      activeChainId: newChainId
+    })
+  }, [ address, newChainId ])
   /* ------------------------------------------- */
   const renderActiveChainInfo = () => {
     const chainInfo = CHAIN_INFO(activeChainId)
@@ -1092,6 +1103,7 @@ const Settings: NextPage = (props) => {
                       {/* -------------------------------------------------*/ }
                       {activeTab === `main` && renderMainTab()}
                       {activeTab === `mainmenu` && tabMenu.render()}
+                      {activeTab === `marketplace` && tabMarketplace.render()}
                       {activeTab === `nftconfig` && tabNftCollection.render()}
                       {activeTab === `mintconfig` && tabMintSettings.render()}
                       {activeTab === `texts` && tabTexts.render()}

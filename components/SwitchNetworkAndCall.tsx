@@ -74,10 +74,10 @@ export default function SwitchNetworkAndCall(options) {
       onClick()
     }
   }
-  
+
   return (
     <>
-      <button disabled={disabled || isSwitching} onClick={switchOrClick} className={className}>
+      <button disabled={disabled || isSwitching || (chainId === undefined)} onClick={switchOrClick} className={className}>
         {icon && (
           <FaIcon icon={icon} />
         )}
@@ -86,7 +86,14 @@ export default function SwitchNetworkAndCall(options) {
             {isSwitching ? (
               <>{(multiChain) ? `Switching...` : `Switching to ${needChainInfo.chainName} (${chainId})...`}</>
             ) : (
-              <>{(multiChain) ? `Switch network for ${action}` : `Switch to ${needChainInfo.chainName} (${chainId}) for ${action}`}</>
+              <>
+                {(multiChain)
+                  ? `Switch network for ${action}`
+                  : (chainId === undefined)
+                    ? `Select blockchain first`
+                    : `Switch to ${needChainInfo.chainName} (${chainId}) for ${action}`
+                }
+              </>
             )}
           </>
         ) : (
@@ -120,7 +127,10 @@ export default function SwitchNetworkAndCall(options) {
               const needChainInfo = CHAIN_INFO(needChainId)
               return (
                 <button key={needChainId} disabled={isSwitching} onClick={() => { switchToChain(needChainId) }} className={styles.adminButton}>
-                  {(isSwitching) ? `Switching...` : `Switch to ${needChainInfo.chainName} (${needChainId})`}
+                  {(isSwitching) ? `Switching...` : 
+                    (needChainId === undefined)
+                      ? `Select blockchain first`
+                      : `Switch to ${needChainInfo.chainName} (${needChainId})`}
                 </button>
               )
             })}

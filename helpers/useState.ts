@@ -25,6 +25,8 @@ export const useStateString = (defValue, options = {}) => {
   return [ value, onSetValue, hasError, setHasError ]
 }
 
+export const useStateAddress = useStateString
+
 export const useStateUri = (defValue, options = {}) => {
   const {
     notEmpty

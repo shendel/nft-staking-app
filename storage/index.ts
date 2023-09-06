@@ -52,6 +52,8 @@ const parseInfo = (info) => {
     design: {},
     menu: false,
     exdata: {},
+    marketplaceContract: '',
+    marketplaceChainId: '',
   }
   const result = JSON.parse(info)
 

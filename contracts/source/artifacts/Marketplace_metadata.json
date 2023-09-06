@@ -13,6 +13,11 @@
 						"type": "address"
 					},
 					{
+						"internalType": "address",
+						"name": "__feeReceiver",
+						"type": "address"
+					},
+					{
 						"internalType": "uint256",
 						"name": "__tradeFee",
 						"type": "uint256"
@@ -722,11 +727,11 @@
 	},
 	"sources": {
 		"source/Marketplace.sol": {
-			"keccak256": "0x39daba9c2ec0307fe1359f332042283494e3e6d86bffe4335d5d62b1a787cc6a",
+			"keccak256": "0x803c9d36144cb3ddaefdd1c9b71ef2f4e517804cec7119183be39e7845923fde",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://226e751e6f82e645562804dcbd35fdb519220417de654bf6c5645b447301fadb",
-				"dweb:/ipfs/QmTm71CVQxq3QnMEd6ocVaGt8TapP6WATLswc5HY2uYoqM"
+				"bzz-raw://ca4eff55500329671498d36c368729bce57e322c84be19ab025ee137480b2c3d",
+				"dweb:/ipfs/QmejZVHTvvjSyV32FbFNYnki4dtBoLJnM23c9ESdrjoiZD"
 			]
 		}
 	},

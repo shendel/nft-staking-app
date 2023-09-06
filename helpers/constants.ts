@@ -207,6 +207,19 @@ export const CHAIN_EXPLORER_LINK = (options) => {
     return ``
   }
 }
+export const CHAINS_LIST = (() => {
+  const ret = Object.keys(AVAILABLE_NETWORKS_INFO).map((k) => {
+    return {
+      id: AVAILABLE_NETWORKS_INFO[k].networkVersion,
+      title: AVAILABLE_NETWORKS_INFO[k].chainName,
+    }
+  })
+  ret.unshift({
+    id: 0,
+    title: `Select Blockchain`,
+  })
+  return ret
+})()
 
 export const CHAIN_INFO = (chainId) => {
   const exists = AVAILABLE_NETWORKS_INFO.filter((chainInfo) => {
