@@ -1297,9 +1297,92 @@ library Address {
     }
 }
 
+/**
+ * @dev Contract module which allows children to implement an emergency stop
+ * mechanism that can be triggered by an authorized account.
+ *
+ * This module is used through inheritance. It will make available the
+ * modifiers `whenNotPaused` and `whenPaused`, which can be applied to
+ * the functions of your contract. Note that they will not be pausable by
+ * simply including this module, only once the modifiers are put in place.
+ */
+abstract contract Pausable is Context {
+    /**
+     * @dev Emitted when the pause is triggered by `account`.
+     */
+    event Paused(address account);
 
+    /**
+     * @dev Emitted when the pause is lifted by `account`.
+     */
+    event Unpaused(address account);
 
-contract Marketplace is Ownable {
+    bool private _paused;
+
+    /**
+     * @dev Initializes the contract in unpaused state.
+     */
+    constructor () {
+        _paused = false;
+    }
+
+    /**
+     * @dev Returns true if the contract is paused, and false otherwise.
+     */
+    function paused() public view virtual returns (bool) {
+        return _paused;
+    }
+
+    /**
+     * @dev Modifier to make a function callable only when the contract is not paused.
+     *
+     * Requirements:
+     *
+     * - The contract must not be paused.
+     */
+    modifier whenNotPaused() {
+        require(!paused(), "Pausable: paused");
+        _;
+    }
+
+    /**
+     * @dev Modifier to make a function callable only when the contract is paused.
+     *
+     * Requirements:
+     *
+     * - The contract must be paused.
+     */
+    modifier whenPaused() {
+        require(paused(), "Pausable: not paused");
+        _;
+    }
+
+    /**
+     * @dev Triggers stopped state.
+     *
+     * Requirements:
+     *
+     * - The contract must not be paused.
+     */
+    function _pause() internal virtual whenNotPaused {
+        _paused = true;
+        emit Paused(_msgSender());
+    }
+
+    /**
+     * @dev Returns to normal state.
+     *
+     * Requirements:
+     *
+     * - The contract must be paused.
+     */
+    function _unpause() internal virtual whenPaused {
+        _paused = false;
+        emit Unpaused(_msgSender());
+    }
+}
+
+contract Marketplace is Ownable, Pausable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
     event Buy(address owner, address buyer, uint256 tokenId,  uint256 price);
@@ -1307,13 +1390,15 @@ contract Marketplace is Ownable {
     event PutUpForSale(address owner, uint256 tokenId, uint256 price);
     event PutUpForSaleWithERC20(address owner, uint256 tokenId, address erc20, uint256 price);
     event WithdrawFromSale(address owner, uint256 tokenId);
-    event WithdrawBank(address to, uint256 amount);
+    event WithdrawWei(address to, uint256 amount);
+    event WithdrawERC20(address to, address erc20, uint256 amount);
     
     struct SelledNFT {
         uint256 tokenId;
         address seller;
         uint256 price;
         address erc20;      // Если указано - продается за токены
+        uint256 utx;
     }
 
     IERC721 public marketNft;
@@ -1322,15 +1407,20 @@ contract Marketplace is Ownable {
 
     uint private _tradeFee = 0;
 
+    function isMarketPlaceContract() public pure returns (bool) {
+        return true;
+    }
 
     mapping(uint256 => bool) private _isTokensAtSale;
     mapping(uint256 => SelledNFT) private _tokensAtSale;
 
-    mapping(address => bool) private _blackList;
-
     address[] private _allowedERC20;
 
-    uint256[] private _tokensIdsAtSale;
+    uint256[] public _tokensIdsAtSale;
+
+    function test() public view returns(uint256) {
+        return _tokensIdsAtSale.length;
+    }
 
     function __addTokenToSale(uint256 _tokenId) internal  {
         _tokensIdsAtSale.push(_tokenId);
@@ -1365,22 +1455,14 @@ contract Marketplace is Ownable {
         _allowedERC20 = __allowedERC20;
     }
 
-    function addBlackList(address user) public onlyOwner {
-        _blackList[user] = true;
-    }
-    function removeBlackList(address user) public onlyOwner {
-        _blackList[user] = false;
-    }
-    function isBlacklisted(address user) public view returns(bool) {
-        return _blackList[user];
-    }
-
     function setAllowedERC20(address[] memory newAllowedERC20) public onlyOwner {
         _allowedERC20 = newAllowedERC20;
     }
+    
     function getAllowedERC20() public view returns(address[] memory) {
         return _allowedERC20;
     }
+
     function isAllowedERC20(address erc20) public view returns (bool) {
         for(uint i=0; i<_allowedERC20.length;i++) {
             if (erc20 == _allowedERC20[i]) return true;
@@ -1388,24 +1470,17 @@ contract Marketplace is Ownable {
         return false;
     }
 
-    function bankAmount() public view returns(uint256) {
-        return address(this).balance;
-    }
-
-    function withdrawBank() public onlyOwner {
+    function withdrawWei() public onlyOwner {
         uint256 amount = address(this).balance;
         payable(msg.sender).transfer(amount);
-        emit WithdrawBank(msg.sender, amount);
+        emit WithdrawWei(msg.sender, amount);
     }
 
-    function bankAmountERC20(address erc20) public view returns(uint256) {
-        IERC20 token = IERC20(erc20);
-        return token.balanceOf(address(this));
-    }
-    function withdrawBankERC20(address erc20) public onlyOwner {
+    function withdrawERC20(address erc20) public onlyOwner {
         IERC20 token = IERC20(erc20);
         uint256 balance = token.balanceOf(address(this));
         token.transfer(owner(), balance);
+        emit WithdrawERC20(msg.sender, erc20, balance);
     }
 
     function getTradeFee() public view returns (uint) {
@@ -1416,8 +1491,8 @@ contract Marketplace is Ownable {
     }
 
 
-    function _clearSellToken(uint256 _tokenId) private {
-        _tokensAtSale[_tokenId] = SelledNFT(0, address(0), 0, address(0));
+    function _clearSellToken(uint256 _tokenId) internal  {
+        _tokensAtSale[_tokenId] = SelledNFT(0, address(0), 0, address(0), 0);
     }
 
     function getMyTokensAtSale() external view returns (SelledNFT[] memory ret) {
@@ -1430,27 +1505,19 @@ contract Marketplace is Ownable {
     {
         uint256 _counter = 0;
         for (uint256 i = 0; i < _tokensIdsAtSale.length; i++) {
-            if ()
+            if (_tokensAtSale[_tokensIdsAtSale[i]].seller == seller) _counter++;
         }
-        /*
-        uint256 _counter = 0;
-        for (uint256 _tokenId = 0; _tokenId < MAX_SUPPLY; _tokenId++) {
-            if (_isTokensAtSale[_tokenId] && _tokensAtSale[_tokenId].seller == seller) {
-                _counter++;
-            }
-        }
-        
         SelledNFT[] memory _ret = new SelledNFT[](_counter);
         _counter = 0;
 
-        for (uint256 _tokenId = 0; _tokenId < MAX_SUPPLY; _tokenId++) {
-            if (_isTokensAtSale[_tokenId] && _tokensAtSale[_tokenId].seller == seller) {
+        for (uint256 i = 0; i < _tokensIdsAtSale.length; i++) {
+            if (_tokensAtSale[_tokensIdsAtSale[i]].seller == seller) {
                 SelledNFT memory _pushItem = SelledNFT(
-                    _tokenId,
-                    _tokensAtSale[_tokenId].uri,
-                    _tokensAtSale[_tokenId].seller,
-                    _tokensAtSale[_tokenId].price,
-                    _tokensAtSale[_tokenId].erc20
+                    _tokensIdsAtSale[i],
+                    _tokensAtSale[_tokensIdsAtSale[i]].seller,
+                    _tokensAtSale[_tokensIdsAtSale[i]].price,
+                    _tokensAtSale[_tokensIdsAtSale[i]].erc20,
+                    _tokensAtSale[_tokensIdsAtSale[i]].utx
                 );
                 _ret[_counter] = _pushItem;
                 _counter++;
@@ -1458,29 +1525,43 @@ contract Marketplace is Ownable {
         }
 
         return _ret;
-        */
     }
 
-    function getTokensAtSale()
+    function getTokensAtSaleCount() public view returns (uint256) {
+        return _tokensIdsAtSale.length;
+    }
+
+    function getTokensAtSale(uint256 offset, uint256 limit)
         external view
         returns (SelledNFT[] memory ret)
     {
-        SelledNFT[] memory _ret = new SelledNFT[](_tokensIdsAtSale.length);
-        for (uint256 i = 0; i < _tokensIdsAtSale.length; i++) {
+        uint256 iStart = offset;
+        uint256 iEnd = iStart + limit;
+        if (iStart >= _tokensIdsAtSale.length) return new SelledNFT[](0);
+        if (offset == 0 && limit == 0) iEnd = _tokensIdsAtSale.length;
+        if (iEnd > _tokensIdsAtSale.length) iEnd = _tokensIdsAtSale.length;
+        
+        uint256 count = iEnd - iStart;
+        uint256 ii = 0;
+        SelledNFT[] memory _ret = new SelledNFT[](count);
+        for (uint256 i = iStart; i < iEnd; i++) {
             uint256 _tokenId = _tokensIdsAtSale[i];
             SelledNFT memory _pushItem = SelledNFT(
                 _tokenId,
                 _tokensAtSale[_tokenId].seller,
                 _tokensAtSale[_tokenId].price,
-                _tokensAtSale[_tokenId].erc20
+                _tokensAtSale[_tokenId].erc20,
+                _tokensAtSale[_tokenId].utx
             );
-            _ret[i] = _pushItem;
+            _ret[ii] = _pushItem;
+            ii++;
         }
         return _ret;
     }
 
     function buyNFTbyERC20(uint _tokenId)
         public
+        whenNotPaused
     {
         require(_isTokensAtSale[_tokenId] == true, "This NFT is not for sale");
         require(_tokensAtSale[_tokenId].erc20 != address(0), "This token selled by Native coin");
@@ -1512,6 +1593,7 @@ contract Marketplace is Ownable {
         marketNft.transferFrom(address(this), msg.sender, _tokenId);
         _isTokensAtSale[_tokenId] = false;
         _clearSellToken(_tokenId);
+        __delTokenForSale(_tokenId);
 
         emit BuyWithERC20(_tokensAtSale[_tokenId].seller, msg.sender, _tokenId, _tokensAtSale[_tokenId].erc20, _tokensAtSale[_tokenId].price);
     }
@@ -1520,6 +1602,7 @@ contract Marketplace is Ownable {
     function buyNFT(uint256 _tokenId)
         public
         payable
+        whenNotPaused
     {
         // check - token is on sale
         require(_isTokensAtSale[_tokenId] == true, "This NFT is not for sale");
@@ -1544,6 +1627,7 @@ contract Marketplace is Ownable {
         emit Buy(_tokensAtSale[_tokenId].seller, msg.sender, _tokenId, _tokensAtSale[_tokenId].price);
 
         _clearSellToken(_tokenId);
+        __delTokenForSale(_tokenId);
     }
 
     function sellNFT(
@@ -1552,6 +1636,7 @@ contract Marketplace is Ownable {
         address _erc20
     )
         public
+        whenNotPaused
     {
         require(
             marketNft.ownerOf(_tokenId) == msg.sender,
@@ -1568,9 +1653,12 @@ contract Marketplace is Ownable {
             _tokenId,
             msg.sender,
             price,
-            _erc20
+            _erc20,
+            block.timestamp
         );
         marketNft.transferFrom(msg.sender, address(this), _tokenId);
+        __addTokenToSale(_tokenId);
+
         if (_erc20 == address(0)) {
             emit PutUpForSaleWithERC20(msg.sender, _tokenId, _erc20, price);
         } else {
@@ -1583,11 +1671,12 @@ contract Marketplace is Ownable {
             require(msg.sender == _tokensAtSale[_tokenId].seller, "This is not your NFT");
         }
 
-        marketNft.transferFrom(address(this), msg.sender, _tokenId);
+        marketNft.transferFrom(address(this), _tokensAtSale[_tokenId].seller, _tokenId);
 
         _isTokensAtSale[_tokenId] = false;        
         _clearSellToken(_tokenId);
+        __delTokenForSale(_tokenId);
         
-        emit WithdrawFromSale(msg.sender, _tokenId);
+        emit WithdrawFromSale(_tokensAtSale[_tokenId].seller, _tokenId);
     }
 }

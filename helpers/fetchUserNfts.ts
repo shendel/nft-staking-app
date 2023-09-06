@@ -13,7 +13,7 @@ const fetchUserNfts = (options) => {
       walletAddress,
       nftAddress,
     } = options
-    
+
     const chainInfo = CHAIN_INFO(chainId)
     if (chainInfo) {
       const web3 = new Web3(chainInfo.rpcUrls[0])
@@ -27,22 +27,22 @@ const fetchUserNfts = (options) => {
       try {
         totalSupply = await nftContract.methods.totalSupply().call()
         hasTotalSupply = true
-      } catch (err) {
-        console.log('Fail fetch total supply')
-      }
+      } catch (err) {}
       // MAX SUPPLY
       try {
-        maxSupply = await nftContract.methods.MAX_SUPPLY().call()
+        maxSupply = await nftContract.methods.maxSupply().call()
         hasMaxSupply = true
       } catch (err) {
-        console.log('Fail fetch max supply')
+        try {
+          maxSupply = await nftContract.methods.MAX_SUPPLY().call()
+          hasMaxSupply = true
+        } catch (err) {}
       }
       if (hasMaxSupply || hasTotalSupply) {
         const multicall = new web3.eth.Contract(MulticallAbi, MULTICALL_CONTRACTS[chainId])
         const abiI = new AbiInterface(ERC721Abi)
         const calls = []
-        
-        for (let checkTokenId = 1; checkTokenId<=((hasTotalSupply) ? totalSupply : maxSupply); checkTokenId++) {
+        for (let checkTokenId = 0; checkTokenId<=(maxSupply || totalSupply); checkTokenId++) {
           calls.push({
             group: checkTokenId,
             func: `ownerOf`,
@@ -50,6 +50,7 @@ const fetchUserNfts = (options) => {
             encoder: abiI,
             target: nftAddress,
           })
+          
           calls.push({
             group: checkTokenId,
             func: `tokenURI`,
@@ -57,6 +58,7 @@ const fetchUserNfts = (options) => {
             encoder: abiI,
             target: nftAddress,
           })
+          
         }
         callMulticallGroup({
           multicall,
@@ -68,7 +70,7 @@ const fetchUserNfts = (options) => {
               ...mcAnswer[tokenId],
             }
           }).filter((tokenInfo) => {
-            return (tokenInfo.ownerOf.toLowerCase() == walletAddress.toLowerCase())
+            return (tokenInfo && tokenInfo.ownerOf && tokenInfo.ownerOf.toLowerCase() == walletAddress.toLowerCase())
           })
           resolve(userNfts)
         }).catch((err) => {

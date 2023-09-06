@@ -46,6 +46,7 @@
 			}
 		],
 		"devdoc": {
+			"details": "Contract module which allows children to implement an emergency stop mechanism that can be triggered by an authorized account. This module is used through inheritance. It will make available the modifiers `whenNotPaused` and `whenPaused`, which can be applied to the functions of your contract. Note that they will not be pausable by simply including this module, only once the modifiers are put in place.",
 			"events": {
 				"Paused(address)": {
 					"details": "Emitted when the pause is triggered by `account`."
@@ -73,7 +74,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"source/Farm.sol": "Pausable"
+			"source/Marketplace.sol": "Pausable"
 		},
 		"evmVersion": "paris",
 		"libraries": {},
@@ -87,12 +88,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"source/Farm.sol": {
-			"keccak256": "0x4a3e9be23c367b09e6adea231412ad35b2e71efbd16613f62d4f544a8a84fea8",
-			"license": "Unlicense",
+		"source/Marketplace.sol": {
+			"keccak256": "0xbf184cac21d351993b5c9d10d58d8731d8d34621185d6097f15672d638482199",
+			"license": "MIT",
 			"urls": [
-				"bzz-raw://1e58b6bc278035e6a763c7f84fade6219e82dcf7a36e4a90e8bbd455d5d5b9e0",
-				"dweb:/ipfs/QmZvVwFS5Axmf81WfEJbgyqVr89vymEHteqWZFAjiqzfAm"
+				"bzz-raw://a8de5434b8e49b7e7d9e2a22b57d7ceb949ec1e9353318bd9c1dd27c74e09f4c",
+				"dweb:/ipfs/QmWY3K8CEEiBjT7DuYoApSjMDHgBgEpYEp27bqouAe4cpF"
 			]
 		}
 	},

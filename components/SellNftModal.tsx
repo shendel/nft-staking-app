@@ -5,11 +5,13 @@ import { CHAIN_INFO, ZERO_ADDRESS } from "../helpers/constants"
 import { toWei, fromWei } from "../helpers/wei"
 import callNftMethod from "../helpers/callNftMethod"
 import BigNumber from "bignumber.js"
+import { NftIsApproved, NftSetApprove } from '../helpers/nftApproveUtils'
 
 export default function SellNftModal(options) {
   const {
     activeWeb3,
     openConfirmWindow,
+    userAddress,
     addNotify,
     nftInfo,
     onClose,
@@ -17,6 +19,7 @@ export default function SellNftModal(options) {
     allowedERC20Info,
     chainId,
     nftContract,
+    marketplaceContract,
     tradeFee
   } = options
 
@@ -65,6 +68,61 @@ export default function SellNftModal(options) {
 
   const [ isSelling, setIsSelling ] = useState(false)
   
+  const [ isApproved, setIsApproved ] = useState(false)
+  const [ isApprovedFetching, setIsApprovedFetching ] = useState(true)
+  const [ isApproving, setIsApproving ] = useState(false)
+
+  useEffect(() => {
+    setIsApprovedFetching(true)
+    NftIsApproved({
+      activeWeb3,
+      nftAddress: nftContract,
+      ownerAddress: userAddress,
+      operatorAddress: marketplaceContract,
+    }).then((approved) => {
+      console.log('>>> approved', approved)
+      setIsApproved(approved)
+      setIsApprovedFetching(false)
+    }).catch((err) => {
+      console.log('>>> Fail check is approved', err)
+      setIsApprovedFetching(false)
+    })
+  }, [])
+  
+  const doApproveAndSell = () => {
+    if (sellPrice) { //&& !hasSellPriceError) {
+      addNotify(`Approving. Confirm tx`)
+      setIsApproving(true)
+      NftSetApprove({
+        activeWeb3,
+        nftAddress: nftContract,
+        operatorAddress: marketplaceContract,
+        onTrx: (txHash) => {
+          console.log('>> onTrx', txHash)
+          addNotify(`Approve TX ${txHash}`, `success`)
+        },
+        onSuccess: (receipt) => {},
+        onError: (err) => {
+          console.log('>> onError', err)
+          addNotify(`Fail approve. ${err.message ? err.message : ''}`, `error`)
+          setIsApproving(false)
+        },
+        onFinally: (answer) => {
+          addNotify(`Successfull approved`, `success`)
+          setIsApproving(false)
+          setIsApproved(true)
+          doSell()
+        }
+      })
+    } else {
+      openConfirmWindow({
+        title: `Selling NFT`,
+        message: `Enter the correct price`,
+        isOk: true,
+      })
+    }
+  }
+
   const doSell = () => {
     if (sellPrice) { //&& !hasSellPriceError) {
       openConfirmWindow({
@@ -75,7 +133,7 @@ export default function SellNftModal(options) {
           addNotify(`Placing NFT to Marketplace. Confirm transaction`)
           callNftMethod({
             activeWeb3,
-            contractAddress: nftContract,
+            contractAddress: marketplaceContract,
             method: 'sellNFT',
             args: [
               nftInfo.tokenId.toString(),
@@ -216,10 +274,21 @@ export default function SellNftModal(options) {
             </div>
           </div>
           <div>
-            <button disabled={isSelling} className={`${styles.mainButton} primaryButton`} onClick={doSell}>
-              Sell
-            </button>
-            <button disabled={isSelling} className={`${styles.mainButton} primaryButton`} onClick={onClose}>
+            {isApproved ? (
+              <button disabled={isSelling} className={`${styles.mainButton} primaryButton`} onClick={doSell}>
+                Sell
+              </button>
+            ) : (
+              <button disabled={isSelling || isApproving || isApprovedFetching} className={`${styles.mainButton} primaryButton`} onClick={doApproveAndSell}>
+                {isApprovedFetching
+                  ? `Fetching...`
+                  : isApproving
+                    ? `Approving...`
+                    : `Approve & Sell`
+                }
+              </button>
+            )}
+            <button disabled={isSelling || isApproving} className={`${styles.mainButton} primaryButton`} onClick={onClose}>
               Cancel
             </button>
           </div>

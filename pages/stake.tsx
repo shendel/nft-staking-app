@@ -312,7 +312,7 @@ const Stake: NextPage = (props) => {
       console.log('maxSupply', maxSupply)
       console.log('totalSupply', totalSupply)
       if (hasMaxSupply || hasTotalSupply) {
-        console.log('>>> do fetch')
+        console.log('>>> do fetch max supply', (maxSupply || totalSupply))
         setCanListOwnedNfts(true)
         const ownerCalls = []
         for (let checkTokenId = 1; checkTokenId<=(maxSupply || totalSupply); checkTokenId++) {

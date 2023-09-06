@@ -8,6 +8,7 @@ import NftMedia from "./NftMedia"
 const nftToken = (options) => {
   const {
     tokenId,
+    currentUser,
     tokenUri,
     price,
     seller,
@@ -20,16 +21,18 @@ const nftToken = (options) => {
     onApproveAndBuy,
     openConfirmWindow,
     isUserNFT,
-    isOwner,
     isTradeAllow,
     isRemoveFromTrade,
     onRemoveFromTrade,
     onAddToTrade,
     isPreview,
     isWalletConnected,
-    isBaseConfigReady
+    isBaseConfigReady,
+
   } = options
 
+const isOwner = (seller && seller.toUpperCase() === currentUser.toUpperCase())
+console.log('NFT ITEM', isOwner, seller, currentUser)
 
   return (
     <div className={`${styles.nftBox} nftTokenBox ${styles.nftSaleBox}`} key={tokenId.toString()}>

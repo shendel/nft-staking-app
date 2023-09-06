@@ -1,3 +1,21 @@
+
+const processValue = (val) => {
+  if (val && val._isBigNumber) val = val.toString()
+
+  if (val instanceof Array) {
+    const newVal = {}
+    Object.keys(val).forEach((valKey) => {
+      newVal[valKey] = val[valKey]
+      if (val[valKey] && val[valKey]._isBigNumber) newVal[valKey] = val[valKey].toString()
+      if (val[valKey] instanceof Array) {
+        newVal[valKey] = processValue(val[valKey])
+      }
+    })
+    return newVal
+  }
+  return val
+}
+
 export const callMulticall = (options) => {
   const {
     multicall,
@@ -20,15 +38,20 @@ export const callMulticall = (options) => {
         callData: encoder.encodeFunctionData(func, args)
       }
     })
-    multicall.methods.aggregate(mcCalls).call().then((answers) => {
-      answers.returnData.forEach((retData, index) => {
-        let val = encoder.decodeFunctionResult(
-          calls[mcCallToValue[index]].func,
-          retData
-        )[0]
-        if (val && val._isBigNumber) val = val.toString()
+    multicall.methods.tryAggregate(false, mcCalls).call().then((answers) => {
+      answers.forEach((retData, index) => {
+        if (retData.success) {
+          let val = encoder.decodeFunctionResult(
+            calls[mcCallToValue[index]].func,
+            retData.returnData
+          )[0]
 
-        ret[mcCallToValue[index]] = val
+          val = processValue(val)
+
+          ret[mcCallToValue[index]] = val
+        } else {
+          ret[mcCallToValue[index]] = false
+        }
       })
       resolve(ret)
     }).catch((err) => {
@@ -60,15 +83,20 @@ export const callMulticallGroup = (options) => {
         callData: encoder.encodeFunctionData(func, args || [])
       }
     })
-    multicall.methods.aggregate(mcCalls).call().then((answers) => {
-      answers.returnData.forEach((retData, index) => {
-        let val = calls[index].encoder.decodeFunctionResult(
-          calls[index].func,
-          retData
-        )[0]
-        if (val && val._isBigNumber) val = val.toString()
+    multicall.methods.tryAggregate(false, mcCalls).call().then((answers) => {
+    console.log(answers)
+      answers.forEach((retData, index) => {
+        if (retData.success) {
+          let val = calls[index].encoder.decodeFunctionResult(
+            calls[index].func,
+            retData.returnData
+          )[0]
+          val = processValue(val)
 
-        ret[calls[index].group][calls[index].value || calls[index].func] = val
+          ret[calls[index].group][calls[index].value || calls[index].func] = val
+        } else {
+          ret[calls[index].group][calls[index].value || calls[index].func] = false
+        }
       })
       resolve(ret)
     }).catch((err) => {
