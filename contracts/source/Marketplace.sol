@@ -1416,11 +1416,9 @@ contract Marketplace is Ownable, Pausable {
 
     address[] private _allowedERC20;
 
-    uint256[] public _tokensIdsAtSale;
+    uint256[] private _tokensIdsAtSale;
 
-    function test() public view returns(uint256) {
-        return _tokensIdsAtSale.length;
-    }
+    address private _feeReceiver;
 
     function __addTokenToSale(uint256 _tokenId) internal  {
         _tokensIdsAtSale.push(_tokenId);
@@ -1453,8 +1451,15 @@ contract Marketplace is Ownable, Pausable {
         marketNft = IERC721(_nft);
         _tradeFee = __tradeFee;
         _allowedERC20 = __allowedERC20;
+        _feeReceiver = msg.sender;
     }
 
+    function getFeeReceiver() public view returns(address) {
+        return _feeReceiver;
+    }
+    function setFeeReceiver(address _newFeeReceiver) public onlyOwner {
+        _feeReceiver = _newFeeReceiver;
+    }
     function setAllowedERC20(address[] memory newAllowedERC20) public onlyOwner {
         _allowedERC20 = newAllowedERC20;
     }
@@ -1586,7 +1591,7 @@ contract Marketplace is Ownable, Pausable {
         if (feeAmount > 0) {
             payToken.safeTransferFrom(
                 address(msg.sender),
-                address(owner()),
+                address(_feeReceiver),
                 feeAmount
             );
         }
@@ -1618,7 +1623,7 @@ contract Marketplace is Ownable, Pausable {
 
         payable(_tokensAtSale[_tokenId].seller).transfer(amountWithFee);
         if (feeAmount > 0) {
-            payable(owner()).transfer(feeAmount);
+            payable(_feeReceiver).transfer(feeAmount);
         }
         
         marketNft.transferFrom(address(this), msg.sender, _tokenId);

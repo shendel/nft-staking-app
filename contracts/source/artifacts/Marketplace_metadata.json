@@ -262,25 +262,6 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "_tokensIdsAtSale",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
 						"name": "_tokenId",
 						"type": "uint256"
 					}
@@ -324,6 +305,19 @@
 						"internalType": "address[]",
 						"name": "",
 						"type": "address[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getFeeReceiver",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -609,6 +603,19 @@
 			{
 				"inputs": [
 					{
+						"internalType": "address",
+						"name": "_newFeeReceiver",
+						"type": "address"
+					}
+				],
+				"name": "setFeeReceiver",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "uint256",
 						"name": "_newTradeFee",
 						"type": "uint256"
@@ -617,19 +624,6 @@
 				"name": "setTradeFee",
 				"outputs": [],
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "test",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -728,11 +722,11 @@
 	},
 	"sources": {
 		"source/Marketplace.sol": {
-			"keccak256": "0xbf184cac21d351993b5c9d10d58d8731d8d34621185d6097f15672d638482199",
+			"keccak256": "0x39daba9c2ec0307fe1359f332042283494e3e6d86bffe4335d5d62b1a787cc6a",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://a8de5434b8e49b7e7d9e2a22b57d7ceb949ec1e9353318bd9c1dd27c74e09f4c",
-				"dweb:/ipfs/QmWY3K8CEEiBjT7DuYoApSjMDHgBgEpYEp27bqouAe4cpF"
+				"bzz-raw://226e751e6f82e645562804dcbd35fdb519220417de654bf6c5645b447301fadb",
+				"dweb:/ipfs/QmTm71CVQxq3QnMEd6ocVaGt8TapP6WATLswc5HY2uYoqM"
 			]
 		}
 	},

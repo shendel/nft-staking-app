@@ -31,8 +31,7 @@ const nftToken = (options) => {
 
   } = options
 
-const isOwner = (seller && seller.toUpperCase() === currentUser.toUpperCase())
-console.log('NFT ITEM', isOwner, seller, currentUser)
+  const isOwner = (seller && seller.toUpperCase() === currentUser.toUpperCase())
 
   return (
     <div className={`${styles.nftBox} nftTokenBox ${styles.nftSaleBox}`} key={tokenId.toString()}>

@@ -235,7 +235,6 @@ const MarketplaceV2: NextPage = (props) => {
   const doFetchUserNfts = () => {
     if (chainId && marketplaceContract && address) {
       setIsUserNftsFetching(true)
-console.log('>>> doFetchUserNfts', address)
       fetchMarketInfo({
         address: marketplaceContract,
         chainId,
@@ -253,10 +252,7 @@ console.log('>>> doFetchUserNfts', address)
   const [ isOtherUserNftsFetching, setIsOtherUserNftsFetching ] = useState(false)
   
   const doFetchOtherUserNfts = () => {
-    console.log('>>> call doFetchOtherUserNfts', chainId && marketInfo && marketInfo.marketNft && address)
-    console.log(chainId, marketInfo, marketInfo.marketNft, address)
     if (chainId && marketInfo && marketInfo.marketNft && address) {
-      console.log('>>> doFetchOtherUserNfts', address)
       setIsOtherUserNftsFetching(true)
       fetchUserNfts({
         chainId,
@@ -372,28 +368,16 @@ console.log('>>> doFetchUserNfts', address)
   useEffect(() => {
     if (isNeedReload) {
       setIsNeedReload(false)
-      setRefreshIndex(refreshIndex+1)
-      console.log('>>> do RELOAD', marketInfo, address)
-      setTokensAtSaleCount(0)
-      setTokensAtSaleOffset(0)
-      setTokensAtSale([])
-      setUserNfts([])
       goToPage(0)
       doFetchUserNfts()
       doFetchOtherUserNfts()
     }
   }, [ isNeedReload ])
+  
   useEffect(() => {
     onWalletChanged(async (newAccount) => {
-      console.log('>>> on wallet change', newAccount)
       setAddress(newAccount)
       setIsNeedReload(true)
-      /*
-      if (newAccount) {
-        refreshTokensAtSale()
-        doFetchOtherUserNfts()
-      }
-      */
     })
   }, [])
 
@@ -422,7 +406,6 @@ console.log('>>> doFetchUserNfts', address)
   }, [ marketInfoFetched ])
 
   useEffect(() => {
-    console.log('>>> Trigger update', address)
     if (chainId && marketplaceContract) {
       const chainInfo = CHAIN_INFO(chainId)
       if (chainInfo) {
