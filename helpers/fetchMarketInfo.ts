@@ -48,6 +48,7 @@ const fetchMarketInfo = (options) => {
                   tokensAtSaleCount:{ func: 'getTokensAtSaleCount' },
                   tokensAtSale:     { func: 'getTokensAtSale', args: [offset, limit] },
                 } : {
+                  isMPContract:     { func: 'isMarketPlaceContract' },
                   owner:            { func: 'owner' },
                   version:          { func: 'version' },
                   marketNft:        { func: 'marketNft' },
@@ -55,6 +56,7 @@ const fetchMarketInfo = (options) => {
                   tokensAtSaleCount:{ func: 'getTokensAtSaleCount' },
                   tokensAtSale:     { func: 'getTokensAtSale', args: [offset, limit] },
                   allowedERC20:     { func: 'getAllowedERC20' },
+                  feeReceiver:      { func: 'getFeeReceiver' },
                 }
         }).then((mcAnswer) => {
           console.log('>> market mc info', mcAnswer)

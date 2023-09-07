@@ -10,13 +10,8 @@ import { getLink } from "../helpers"
 import { useRouter } from "next/router"
 import useStorage from "../storage"
 import fetchTokensListInfo from "../helpers/fetchTokensListInfo"
-import fetchNftInfo from "../helpers/fetchNftInfo"
-import callNftMethod from "../helpers/callNftMethod"
 import callMPMethod from "../helpers/callMPMethod"
-import crypto from "crypto"
 import nftSaleToken from "../components/nftSaleToken"
-import NftAirdropContractData from "../contracts/source/artifacts/StakeNFT.json"
-import MyNFTAbi from '../contracts/MyNFTAbi.json'
 import { CHAIN_INFO, ZERO_ADDRESS } from "../helpers/constants"
 import { toWei, fromWei } from "../helpers/wei"
 import BigNumber from "bignumber.js"
@@ -195,7 +190,7 @@ const MarketplaceV2: NextPage = (props) => {
       onConfirm: () => {
         addNotify(`Buying NFT. Confirm transaction`)
         setIsBuying(true)
-        callNftMethod({
+        callMPMethod({
           activeWeb3,
           contractAddress: marketplaceContract,
           method: tokensAtSale[lotIndex].erc20 == ZERO_ADDRESS ? 'buyNFT' : 'buyNFTbyERC20',

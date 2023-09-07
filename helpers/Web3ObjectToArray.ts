@@ -1,6 +1,8 @@
   const Web3ObjectToArray = (object) => {
-    return Object.keys(object).map((key) => {
-      return object[key]
-    })
+    try {
+      return Object.keys(object).map((key) => {
+        return object[key]
+      })
+    } catch (err) { return [] }
   }
   export default Web3ObjectToArray

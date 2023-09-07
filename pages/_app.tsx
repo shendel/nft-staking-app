@@ -58,12 +58,12 @@ console.log(storageData)
 
 
   const onConfirmWindowConfirm = () => {
-    confirmWindowOnConfirm()
     setIsConfirmWindowOpened(false)
+    confirmWindowOnConfirm()
   }
   const onConfirmWindowCancel = () => {
-    confirmWindowOnCancel()
     setIsConfirmWindowOpened(false)
+    confirmWindowOnCancel()
   }
   const openConfirmWindow = (options = {}) => {
     const {

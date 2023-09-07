@@ -7,8 +7,12 @@ export default function List(options) {
   const {
     labelEmpty,
     labelAddItem,
-    onChange
-  } = options
+    onChange,
+    buttons
+  } = {
+    buttons: null,
+    ...options
+  }
 
   const [ items, setItems ] = useState(options?.items ? [ ...options.items] : [])
 
@@ -79,6 +83,7 @@ export default function List(options) {
           <div className="empty">{labelEmpty ? labelEmpty : `List is empty`}</div>
         )}
         <div className="actions">
+          {buttons}
           <a className={styles.buttonWithIcon} onClick={onAddItem}>
             <FaIcon icon="add" />
             {labelAddItem ? labelAddItem : `Add new item`}
