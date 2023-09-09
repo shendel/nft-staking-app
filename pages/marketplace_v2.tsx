@@ -25,6 +25,9 @@ import fetchMarketInfo from '../helpers/fetchMarketInfo'
 import fetchNftContent from '../helpers/fetchNftContent'
 import Web3ObjectToArray from '../helpers/Web3ObjectToArray'
 import { NftIsApproved } from '../helpers/nftApproveUtils'
+import { getAssets } from "/helpers/getAssets"
+
+import Header from '/components/Header'
 
 const debugLog = (msg) => { console.log(msg) }
 
@@ -470,6 +473,7 @@ const MarketplaceV2: NextPage = (props) => {
   
   return (
     <div className={styles.container}>
+      {/*<Header page={`marketplace`} />*/}
       {navBlock(`marketplace`)}
       {logoBlock({
         getText,
@@ -508,8 +512,27 @@ const MarketplaceV2: NextPage = (props) => {
               {activeTab === TABS.ALL && (<>All NFTs on sale</>)}
               {activeTab === TABS.USER && (<>Your NFTs on sale</>)}
             </h3>
-            
-            <div className={styles.nftBoxGrid}>
+            <style jsx>
+              {`
+                .loadingHolder {
+                  position: relative;
+                }
+                .loading {
+                  display: block;
+                  position: absolute;
+                  left: 0px;
+                  top: 0px;
+                  bottom: 0px;
+                  right: 0px;
+                  min-height: 64px;
+                  background: url(${getAssets('images/nft-media-loading.svg')});
+                  background-position: center;
+                  background-size: contain;
+                  background-repeat: no-repeat;
+                }
+              `}
+            </style>
+            <div className={`${styles.nftBoxGrid} loadingHolder`}>
               {(activeTab === TABS.ALL ? tokensAtSale : userNfts ).map((lotInfo, lotIndex) => {
                 const {
                   uri,
@@ -530,7 +553,7 @@ const MarketplaceV2: NextPage = (props) => {
                 }
                 return nftSaleToken({
                   refreshIndex,
-                  currentUser: address,
+                  currentUser: address || '',
                   isWalletConnected: address,
                   tokenId: tokenId.toString(),
                   tokenUri: tokensUrls[tokenId.toString()] || false,
@@ -560,11 +583,12 @@ const MarketplaceV2: NextPage = (props) => {
                 })
                 
               })}
+              
               {activeTab === TABS.ALL && tokensAtSaleFetching && (
-                <div>Fetching tokens</div>
+                <div className="loading"></div>
               )}
               {activeTab === TABS.USER && isUserNftsFetching && (
-                <div>Fetching tokens</div>
+                <div className="loading"></div>
               )}
             </div>
             {activeTab === TABS.USER && address && (

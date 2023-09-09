@@ -108,6 +108,11 @@ const doConnectWithMetamask = async (options) => {
       } = answer
       if (onSetActiveChain) onSetActiveChain(activeChainId)
 
+      if (needChainId === undefined) {
+        if (onSetActiveWeb3) onSetActiveWeb3(web3)
+        if (onConnected) onConnected(activeChainId, web3)
+        return
+      }
       if (`${activeChainId}` === `${needChainId}`) {
         if (onSetActiveWeb3) onSetActiveWeb3(web3)
         if (onConnected) onConnected(activeChainId, web3)
@@ -219,6 +224,7 @@ const waitChain = (chainId) => {
 const getActiveChainId = () => {
   return window.ethereum && window.ethereum.networkVersion
 }
+
 
 export {
   switchOrAddChain,
