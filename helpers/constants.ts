@@ -30,6 +30,11 @@ export const CURRENCIES = {
     name: "FTM",
     symbol: 'FTM',
     decimals: 18
+  },
+  ALV: {
+    name: 'ALV',
+    symbol: 'ALV',
+    decimals: 18
   }
 }
 
@@ -48,9 +53,23 @@ export const MULTICALL_CONTRACTS = {
   42161: '0x80C7DD17B01855a6D2347444a0FCC36136a314de',
   421611: '0xf27ee99622c3c9b264583dacb2cce056e194494f',
   250: '0x22D4cF72C45F8198CfbF4B568dBdB5A85e8DC0B5',
+  3797: '0x48d7ac38530697aDB91061B6D141C8c763edE565'
 }
 
 export const AVAILABLE_NETWORKS_INFO = [
+  {
+    slub: 'alv_mainnet',
+    chainName: 'AlveyChain',
+    chainId: '0xED5',
+    networkVersion: 3797,
+    rpcUrls: ['https://rpc2.alvey.io/rpc'],
+    blockExplorerUrls: ['https://alveyscan.com/'],
+    isTestnet: false,
+    nativeCurrency: CURRENCIES.ALV,
+    multicall: '0x48d7ac38530697aDB91061B6D141C8c763edE565',
+    storage: '0x87a6417F03E106A05698F18829bB3a40CBC54f61',
+    exStorage: '0x021a76444261B27d5734d25e55F5d4fCBbFD20Bc'
+  },
   {
     slug: 'bsc_testnet',
     chainName: 'Binance Smart Chain - Testnet',
@@ -69,7 +88,10 @@ export const AVAILABLE_NETWORKS_INFO = [
     rpcUrls: ['https://bsc-dataseed.binance.org/'],
     blockExplorerUrls: ['https://bscscan.com'],
     isTestnet: false,
-    nativeCurrency: CURRENCIES.BNB
+    nativeCurrency: CURRENCIES.BNB,
+    multicall: '0xa9193376D09C7f31283C54e56D013fCF370Cd9D9',
+    storage: '0xa7472f384339D37EfE505a1A71619212495A973A',
+    exStorage: '0x05b12174a320967698f1e432793d6f5b3b83bb7c'
   },
   /*
   {
@@ -113,7 +135,10 @@ export const AVAILABLE_NETWORKS_INFO = [
     rpcUrls: ['https://goerli.infura.io/v3/5ffc47f65c4042ce847ef66a3fa70d4c'],
     blockExplorerUrls: ['https://goerli.etherscan.io'],
     isTestnet: true,
-    nativeCurrency: CURRENCIES.ETH
+    nativeCurrency: CURRENCIES.ETH,
+    multicall: '0xf0cc52809a6c63dab849e368b0620db17cb41cf8',
+    storage: '0xafb8f27df1f629432a47214b4e1674cbcbdb02df',
+    exStorage: '0xCFd685E34133b4bd0eB2Dd3CE501f37587ECb86c'
   },
   {
     slug: 'eth_mainnet',

@@ -6,13 +6,15 @@ import isProd from "../helpers/isProd"
 import { CHAIN_INFO } from "../helpers/constants"
 
 const storageAddressByChainId = {
-  5: '0xafb8f27df1f629432a47214b4e1674cbcbdb02df',
-  56: '0xa7472f384339D37EfE505a1A71619212495A973A',
+  5:    '0xafb8f27df1f629432a47214b4e1674cbcbdb02df',
+  56:   '0xa7472f384339D37EfE505a1A71619212495A973A',
+  3797: '0x87a6417F03E106A05698F18829bB3a40CBC54f61'
 }
 
 const exStorageAddressByChainId = {
-  5: '0xCFd685E34133b4bd0eB2Dd3CE501f37587ECb86c',
-  56: '0x05b12174a320967698f1e432793d6f5b3b83bb7c'
+  5:    '0xCFd685E34133b4bd0eB2Dd3CE501f37587ECb86c',
+  56:   '0x05b12174a320967698f1e432793d6f5b3b83bb7c',
+  3797: '0x021a76444261B27d5734d25e55F5d4fCBbFD20Bc'
 }
 
 const storageChainIdMainnet = 56
