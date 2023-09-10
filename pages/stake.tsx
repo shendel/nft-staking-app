@@ -750,6 +750,7 @@ const Stake: NextPage = (props) => {
                 )}
               </p>
             </div>
+            {/*
             <div className={`${styles.tokenItem} stakeRewardAndBank`}>
               <h3 className={styles.tokenLabel}>Stake Farm balance</h3>
               <p className={styles.tokenValue}>
@@ -765,6 +766,7 @@ const Stake: NextPage = (props) => {
                 )}
               </p>
             </div>
+            */}
           </div>
 
           <hr className={`${styles.divider} ${styles.spacerTop}`} />

@@ -17,8 +17,8 @@ const exStorageAddressByChainId = {
   3797: '0x021a76444261B27d5734d25e55F5d4fCBbFD20Bc'
 }
 
-const storageChainIdMainnet = 56
-const storageChainIdTestnet = 5
+const storageChainIdMainnet = 3797// 56
+const storageChainIdTestnet = 3797// 5
 
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'

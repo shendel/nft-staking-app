@@ -83,6 +83,7 @@ const designGroups = [
       { type: 'number', title: 'Image max-height', target: 'nftMaxHeight', unit: 'px' },
     ],
   },
+  /*
   {
     title: 'Mint page',
     key: 'mintPage', 
@@ -97,6 +98,7 @@ const designGroups = [
       { type: 'color', title: 'Color of text after price', target: 'mintPageAfterPriceColor' },
     ],
   },
+  */
   {
     title: 'Stake page',
     key: 'stakePage',

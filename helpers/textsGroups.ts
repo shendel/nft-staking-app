@@ -50,6 +50,7 @@ export const textsGroups = [
         markdown: true,
         multiline: true,
       },
+      /*
       {
         code: `MainPage_Mint_Title`,
         desc: `Mint section title`,
@@ -62,6 +63,7 @@ export const textsGroups = [
         markdown: true,
         multiline: true,
       },
+      */
       {
         code: `MainPage_Stake_Title`,
         desc: `Stake section title`,
@@ -76,6 +78,7 @@ export const textsGroups = [
       }
     ],
   },
+  /*
   {
     title: `Mint page`,
     key: 'mintPage',
@@ -122,6 +125,7 @@ export const textsGroups = [
       }
     ]
   },
+  */
   {
     title: `Stake page`,
     key: 'stakePage',

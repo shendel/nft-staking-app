@@ -29,6 +29,7 @@ const Home: NextPage = (props) => {
         className={styles.nftBoxGrid}
       >
         {/* Mint a new NFT */}
+        {/*
         { getBoolOption( `EnabledDemoMind` , true ) && (
           <div className={`${styles.optionSelectBox} mainPageSection`}>
             <a href={getLink(`mint`)}>
@@ -41,6 +42,7 @@ const Home: NextPage = (props) => {
             </a>
           </div>
         )}
+        */}
         <div
           className={`${styles.optionSelectBox} mainPageSection`}
           

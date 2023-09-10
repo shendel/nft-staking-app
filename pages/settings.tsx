@@ -54,9 +54,9 @@ const storageChainId = 5
 const storageAddress = '0xafb8f27df1f629432a47214b4e1674cbcbdb02df'
 */
 const settingsTabs = {
-  nftconfig: `NFT collection`,
-  marketplace: `Marketplace`,
-  mintconfig: `Mint settings`,
+  //nftconfig: `NFT collection`,
+  //marketplace: `Marketplace`,
+  //mintconfig: `Mint settings`,
   main: `Farm settings`,
   mainmenu: `Menu Items`,
   texts: `Edit texts`,
@@ -822,6 +822,7 @@ const Settings: NextPage = (props) => {
                   <button disabled={isDeployingNFTDemo || isNFTInfoFetching} className={styles.adminButton} onClick={doFetchNFTInfo}>
                     {isNFTInfoFetching ? `Fetching NFT info` : `Fetch NFT info`}
                   </button>
+                  {/*
                   <SwitchNetworkAndCall chainId={newChainId} className={styles.adminButton}
                     disabled={isDeployingNFTDemo || isNFTInfoFetching}
                     onClick={() => { doDeployDemoNFT.apply(this) }}
@@ -829,6 +830,7 @@ const Settings: NextPage = (props) => {
                   >
                     {isDeployingNFTDemo ? `Deploying Demo NFT` : `Deploy Demo NFT collection`}
                   </SwitchNetworkAndCall>
+                  */}
                 </>
               )
             })}
