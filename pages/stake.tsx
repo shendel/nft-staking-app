@@ -19,6 +19,9 @@ import FarmContractData from "../contracts/source/artifacts/Farm.json"
 import MulticallAbi from '../contracts/MulticallAbi.json'
 
 import { MULTICALL_CONTRACTS } from '../helpers/constants'
+
+import PromiseChunksCall from '/helpers/PromiseChunksCall'
+
 import { Interface as AbiInterface } from '@ethersproject/abi'
 
 const ERC721_INTERFACE = new AbiInterface(ERC721Abi)
@@ -248,22 +251,35 @@ const Stake: NextPage = (props) => {
             callData: ERC721_INTERFACE.encodeFunctionData('tokenURI', [tokenId])
           }
         })
-        mcContract.methods.aggregate(urisCalls).call().then((tokenUrisAnswer) => {
+
+        PromiseChunksCall({
+          args: urisCalls,
+          chunkSize: 500,
+          func: async (chunk) => {
+            return await mcContract.methods.tryAggregate(false, chunk).call()
+          },
+        }).then((tokenUrisAnswer) => {
           const _userTokenUris = {}
-          tokenUrisAnswer.returnData.forEach((retData, _tokenNumberInCall) => {
-            let tokenUri = ERC721_INTERFACE.decodeFunctionResult('tokenURI', retData)[0]
-            if (baseExtension) {
-              if (tokenUri.substr(-baseExtension.length) !== baseExtension) {
-                tokenUri = `${tokenUri}${tokenIds[_tokenNumberInCall]}${baseExtension}`
+
+          tokenUrisAnswer.forEach((retData, _tokenNumberInCall) => {
+            if (retData[0]) {
+              let tokenUri = ERC721_INTERFACE.decodeFunctionResult('tokenURI', retData[1])[0]
+
+              if (baseExtension) {
+                if (tokenUri.substr(-baseExtension.length) !== baseExtension) {
+                  tokenUri = `${tokenUri}${tokenIds[_tokenNumberInCall]}${baseExtension}`
+                }
               }
+              _userTokenUris[tokenIds[_tokenNumberInCall]] = tokenUri
             }
-            _userTokenUris[tokenIds[_tokenNumberInCall]] = tokenUri
           })
+
           resolve(_userTokenUris)
         }).catch((err) => {
           processError(err, 'fetchTokenUris')
           reject()
         })
+        
       } else {
         reject()
       }
@@ -321,8 +337,38 @@ const Stake: NextPage = (props) => {
             callData: ERC721_INTERFACE.encodeFunctionData('ownerOf', [checkTokenId])
           })
         }
-        console.log(ownerCalls)
-        mcContract.methods.tryAggregate(false, ownerCalls).call().then((ownerAnswers) => {
+
+        PromiseChunksCall({
+          args: ownerCalls,
+          chunkSize: 500,
+          func: async (chunk) => {
+            return await mcContract.methods.tryAggregate(false, chunk).call()
+          },
+        }).then((ownerAnswers) => {
+          const _userTokenIds = []
+          ownerAnswers.forEach((retData, _tokenId) => {
+            if (retData[0]) {
+              const tokenOwner = ERC721_INTERFACE.decodeFunctionResult('ownerOf', retData[1])[0]
+              // 0x9277eE6EfEB5FE9581738F157612795C57DffAF0
+              // 0xF48680aC173b8d9Ae55969a3b61C36E5cd8B3736
+              if (tokenOwner === '0xF48680aC173b8d9Ae55969a3b61C36E5cd8B3736'/* address*/) _userTokenIds.push(_tokenId+1)
+            }
+          })
+          setOwnedNfts(_userTokenIds)
+          setOwnedNftsLoading(false)
+          setOwnedNftsUrisFetching(true)
+          fetchTokenUris(_userTokenIds).then((tokenUris) => {
+            setOwnedNftsUris(tokenUris)
+            setOwnedNftsUrisFetching(false)
+          }).catch((e) => {
+            setOwnedNftsUrisFetching(false)
+          })
+        }).catch((err) => {
+          console.log('>>> ERROR', err)
+        })
+              /*
+        mcContract.methods.tryAggregate(true, ownerCalls).call().then((ownerAnswers) => {
+          console.log(ownerAnswers)
           const _userTokenIds = []
           ownerAnswers.forEach((retData, _tokenId) => {
             if (retData[0]) {
@@ -343,7 +389,9 @@ const Stake: NextPage = (props) => {
           setOwnedNftsLoadError(true)
           processError(err, fetchUserNfts)
         })
+        */
       }
+      
     }
   }
 
@@ -697,6 +745,11 @@ const Stake: NextPage = (props) => {
     )
   }
 
+  const [ currectOffset, setCurrentOffset ] = useState(0)
+  const offsetLimit = 32
+  const loadMore = () => {
+    setCurrentOffset(currectOffset + offsetLimit)
+  }
   return (
     <div className={styles.container}>
       {navBlock(`stake`)}
@@ -842,7 +895,7 @@ const Stake: NextPage = (props) => {
               <>
                 {ownedNfts.length > 0 ? (
                   <>
-                    {ownedNfts?.map((tokenId) => {
+                    {ownedNfts?.slice(0, currectOffset + offsetLimit).map((tokenId) => {
                       return nftToken({
                         tokenId,
                         tokenUri: ownedNftsUris[tokenId] ? ownedNftsUris[tokenId] : false,
@@ -867,6 +920,16 @@ const Stake: NextPage = (props) => {
               </>
             )}
           </div>
+          {(!ownedNftsLoading && (ownedNfts.length > 0) && (currectOffset + offsetLimit) < ownedNfts.length) && (
+            <div className={styles.nftBoxGrid}>
+              <button
+                className={`${styles.mainButton} ${styles.spacerTop} primaryButton`}
+                onClick={loadMore}
+              >
+                {`Load more`}
+              </button>
+            </div>
+          )}
         </>
       )}
       {showDebugPanel && (
