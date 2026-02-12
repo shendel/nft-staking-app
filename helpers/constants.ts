@@ -30,6 +30,11 @@ export const CURRENCIES = {
     name: "FTM",
     symbol: 'FTM',
     decimals: 18
+  },
+  OZO: {
+    name: "OZO",
+    symbol: 'OZO',
+    decimals: 18
   }
 }
 
@@ -48,9 +53,19 @@ export const MULTICALL_CONTRACTS = {
   42161: '0x80C7DD17B01855a6D2347444a0FCC36136a314de',
   421611: '0xf27ee99622c3c9b264583dacb2cce056e194494f',
   250: '0x22D4cF72C45F8198CfbF4B568dBdB5A85e8DC0B5',
+  4000: '0x9d42e2cE827f5Bf95D0207982c93f1eD3E0030Af',
 }
 
 export const AVAILABLE_NETWORKS_INFO = [
+  {
+    slug: 'ozone_mainnet',
+    chainName: 'OzoneChain - Mainnet',
+    chainId: '0xFA0',
+    networkVersion: 4000,
+    rpcUrls: ['https://node1.ozonechain.io/'],
+    blockExplorerUrls: ['https://ozonescan.io/'],
+    nativeCurrency: CURRENCIES.OZO
+  },
   {
     slug: 'bsc_testnet',
     chainName: 'Binance Smart Chain - Testnet',
@@ -83,6 +98,7 @@ export const AVAILABLE_NETWORKS_INFO = [
     nativeCurrency: CURRENCIES.MATIC
   },
   */
+  /*
   {
     slug: 'matic_mainnet',
     chainName: 'Polygon',
@@ -93,6 +109,7 @@ export const AVAILABLE_NETWORKS_INFO = [
     isTestnet: false,
     nativeCurrency: CURRENCIES.MATIC
   },
+  */
   /*
   {
     slug: 'eth_rinkeby',
@@ -105,6 +122,7 @@ export const AVAILABLE_NETWORKS_INFO = [
     nativeCurrency: CURRENCIES.ETH
   },
   */
+  /*
   {
     slug: 'eth_goerli',
     chainName: 'Ethereum - Testnet (Goerli)',
@@ -115,6 +133,7 @@ export const AVAILABLE_NETWORKS_INFO = [
     isTestnet: true,
     nativeCurrency: CURRENCIES.ETH
   },
+  */
   {
     slug: 'eth_mainnet',
     chainName: 'Ethereum',

@@ -27,12 +27,14 @@ export const defMenus = [
     link: '',
     blank: false
   },
+  /*
   {
     title: 'Marketplace',
     target: 'MARKETPLACE',
     link: '',
     blank: false
   },
+  */
   {
     title: 'Stake',
     target: 'STAKE',
