@@ -295,15 +295,20 @@ const Stake: NextPage = (props) => {
         maxSupplyType = `maxSupply`
       } catch (err) {
         console.log('Fail fetch max supply')
-        maxSupply = await nftContract.methods.MAX_SUPPLY().call()
-        hasMaxSupply = true
-        maxSupplyType = `MAX_SUPPLY`
+        try {
+          maxSupply = await nftContract.methods.MAX_SUPPLY().call()
+          hasMaxSupply = true
+          maxSupplyType = `MAX_SUPPLY`
+        } catch (err) {
+          console.log('... total fail MAX_SUPPLY')
+        }
       }
       console.log('hasMaxSupply', hasMaxSupply)
       console.log('hasTotalSupply', hasTotalSupply)
       console.log('maxSupply', maxSupply)
       console.log('totalSupply', totalSupply)
       if (hasMaxSupply || hasTotalSupply) {
+        console.log('>>> DO FETCH LIST')
         setCanListOwnedNfts(true)
         const ownerCalls = []
         for (let checkTokenId = 1; checkTokenId<=(maxSupply); checkTokenId++) {
@@ -312,12 +317,14 @@ const Stake: NextPage = (props) => {
             callData: ERC721_INTERFACE.encodeFunctionData('ownerOf', [checkTokenId])
           })
         }
+        console.log('MC Calls', ownerCalls)
         mcContract.methods.tryAggregate(false, ownerCalls).call().then((ownerAnswers) => {
+          console.log('>>> aggregate', address, ownerAnswers)
           const _userTokenIds = []
           ownerAnswers.forEach((retData, _tokenId) => {
             if (retData[0]) {
               const tokenOwner = ERC721_INTERFACE.decodeFunctionResult('ownerOf', retData[1])[0]
-              if (tokenOwner === address) _userTokenIds.push(_tokenId+1)
+              if (tokenOwner.toLowerCase() === address.toLowerCase()) _userTokenIds.push(_tokenId+1)
             }
           })
           setOwnedNfts(_userTokenIds)
@@ -456,6 +463,7 @@ const Stake: NextPage = (props) => {
     if (activeWeb3 && (`${activeChainId}` == `${chainId}`)) {
       activeWeb3.eth.getAccounts().then((accounts) => {
         setAddress(accounts[0])
+        
         const _mcContract = new activeWeb3.eth.Contract(MulticallAbi, MULTICALL_CONTRACTS[activeChainId])
         console.log(_mcContract)
         setMcContract(_mcContract)
